@@ -74,6 +74,7 @@
             <file name="Job.php" role="php"/>
             <file name="Process.php" role="php"/>
             <file name="Runkit.php" role="php"/>
+            <file name="TestTimeAnalyser.php" role="php"/>
           </dir>
         </dir>
       </dir>
@@ -118,6 +119,7 @@
       <install name="library/Mutagenesis/Utility/Job.php" as="Mutagenesis/Utility/Job.php"/>
       <install name="library/Mutagenesis/Utility/Process.php" as="Mutagenesis/Utility/Process.php"/>
       <install name="library/Mutagenesis/Utility/Runkit.php" as="Mutagenesis/Utility/Runkit.php"/>
+      <install name="library/Mutagenesis/Utility/TestTimeAnalyser.php" as="Mutagenesis/Utility/TestTimeAnalyser.php"/>
     </filelist>
   </phprelease>
 </package>
