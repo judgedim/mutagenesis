@@ -41,9 +41,6 @@
           <dir name="Adapter">
             <file name="AdapterAbstract.php" role="php"/>
             <file name="Phpunit.php" role="php"/>
-            <dir name="Phpunit">
-              <file name="Runner.php" role="php"/>
-            </dir>
           </dir>
           <file name="Console.php" role="php"/>
           <file name="Generator.php" role="php"/>
@@ -96,7 +93,6 @@
       <install as="mutagenesis.bat" name="bin/mutagenesis.bat"/>
       <install name="library/Mutagenesis/Adapter/AdapterAbstract.php" as="Mutagenesis/Adapter/AdapterAbstract.php"/>
       <install name="library/Mutagenesis/Adapter/Phpunit.php" as="Mutagenesis/Adapter/Phpunit.php"/>
-      <install name="library/Mutagenesis/Adapter/Phpunit/Runner.php" as="Mutagenesis/Adapter/Phpunit/Runner.php"/>
       <install name="library/Mutagenesis/Console.php" as="Mutagenesis/Console.php"/>
       <install name="library/Mutagenesis/Generator.php" as="Mutagenesis/Generator.php"/>
       <install name="library/Mutagenesis/Loader.php" as="Mutagenesis/Loader.php"/>
