@@ -92,18 +92,11 @@ class Base extends RunnerAbstract
 
                 $result = $this->getAdapter()->runTests(
                     $this,
-                    false,
+                    true,
                     false,
                     $mutation,
                     $orderedTestCases
                 );
-
-                $output = \Mutagenesis\Utility\Process::run(
-                    $job->generate($mutation, false, $orderedTestCases), $this->getTimeout()
-                );
-                /* TODO: Store output for per-mutant results */
-                $result = $this->getAdapter()->processOutput($output['stdout']);
-                
 
                 $countMutants++;
                 if ($result[0] === 'timed out' || !$result[0]) {

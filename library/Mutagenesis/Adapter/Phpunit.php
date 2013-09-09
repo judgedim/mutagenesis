@@ -64,9 +64,9 @@ class Phpunit extends AdapterAbstract
             );
         }
         if (count($testCases) > 0) { // tests cases always 0 on first run
-            foreach ($testCases as $case) {
+            foreach ($testCases as $className => $case) {
                 $args = $options;
-                $args['clioptions'][] = $case['class'];
+                $args['clioptions'][] = $className;
                 $args['clioptions'][] = $case['file'];
                 $output = self::execute(
                     $job->generate(

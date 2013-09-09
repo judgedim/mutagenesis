@@ -32,8 +32,8 @@ class Job
      */
     public function generate(array $mutation = array(), array $args = array(), $timeout = 60, $bootstrap = null)
     {
-        $serializedArgs = addslashes(serialize($args));
-        $serializedMutation = addslashes(serialize($mutation));
+        $serializedArgs = addcslashes(serialize($args), '$"');
+        $serializedMutation = addcslashes(serialize($mutation), '$"');
         if (is_null($bootstrap)) {
             $bootstrap = 'null';
         } else {
@@ -45,6 +45,7 @@ namespace MutagenesisEnv;
 declare(ticks = 1);
 require_once 'PHPUnit/Autoload.php';
 require_once 'Mutagenesis/Loader.php';
+require_once 'tests/bootstrap.php';
 \$loader = new \Mutagenesis\Loader;
 \$loader->register();
 class Job {
