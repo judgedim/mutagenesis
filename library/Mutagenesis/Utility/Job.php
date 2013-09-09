@@ -45,7 +45,6 @@ namespace MutagenesisEnv;
 declare(ticks = 1);
 require_once 'PHPUnit/Autoload.php';
 require_once 'Mutagenesis/Loader.php';
-require_once 'tests/bootstrap.php';
 \$loader = new \Mutagenesis\Loader;
 \$loader->register();
 class Job {
