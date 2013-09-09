@@ -19,4 +19,4 @@ before_script:
 script: phpunit --coverage-text --configuration ./tests/phpunit.xml
 notifications:
     email:
-        - padraic.brady@gmail.com
+        - alexx.rusnak@gmail.com
