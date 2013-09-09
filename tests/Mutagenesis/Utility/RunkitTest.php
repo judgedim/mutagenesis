@@ -19,18 +19,12 @@
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
-require_once 'Mutagenesis/Mutation/MutationAbstract.php';
-
-require_once 'Mutagenesis/Mutation/OperatorAddition.php';
-
-require_once 'Mutagenesis/Utility/Runkit.php';
-
 class Mutagenesis_RunkitTest extends PHPUnit_Framework_TestCase
 {
 
     public function setUp()
     {
-        $this->root = dirname(__FILE__) . '/_files';
+        $this->root = __DIR__ . '/_files';
     }
     
     public function testShouldApplyGivenMutationsUsingRunkitToReplaceEffectedMethods()

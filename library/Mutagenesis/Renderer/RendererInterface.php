@@ -58,6 +58,7 @@ interface RendererInterface
      * @param integer $killed Number of mutations that did cause a test failure
      * @param integer $escaped Number of mutations that did not cause a test failure
      * @param array $mutationDiffs Array of mutation diff strings showing each test-fail mutation
+     * @param array $mutantsCaptured Array of captured mutants.
      * @param string $output Result output from test adapter
      * @return string
      */

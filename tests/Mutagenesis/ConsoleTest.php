@@ -24,7 +24,7 @@ class Mutagenesis_ConsoleTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->root = dirname(__FILE__) . '/_files/root/base1';
+        $this->root = __DIR__ . '/_files/root/base1';
     }
 
     public function testConsoleSetsRunnerBaseDirectoryFromCommandLineOptions()

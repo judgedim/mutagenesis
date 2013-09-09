@@ -19,8 +19,6 @@
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
-require_once 'Mutagenesis/Mutation/OperatorDecrement.php';
-
 class Mutagenesis_Mutation_OperatorDecrementTest extends PHPUnit_Framework_TestCase
 {
 

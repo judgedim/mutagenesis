@@ -1,6 +1,23 @@
 <?php
-
-require_once 'Mutagenesis/Mutable.php';
+/**
+ * Mutagenesis
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://github.com/padraic/mutateme/blob/rewrite/LICENSE
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to padraic@php.net so we can send you a copy immediately.
+ *
+ * @category   Mutagenesis
+ * @package    Mutagenesis
+ * @subpackage UnitTests
+ * @copyright  Copyright (c) 2010 Pádraic Brady (http://blog.astrumfutura.com)
+ * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
+ */
 
 class Mutagenesis_MutableTest extends PHPUnit_Framework_TestCase
 {
@@ -9,7 +26,7 @@ class Mutagenesis_MutableTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->root = dirname(__FILE__) . '/_files/root/base2/library';
+        $this->root = __DIR__ . '/_files/root/base2/library';
     }
 
     public function testShouldMaintainFilePathInfoOncePassedInConstructor()
@@ -159,11 +176,11 @@ class Mutagenesis_MutableTest extends PHPUnit_Framework_TestCase
      */
     public function testCreatesAccurateMapOfIfClausesSingleNonStaticMethod()
     {
-        $file = new \Mutagenesis\Mutable(dirname(__FILE__) . '/_files/IfClause.php');
+        $file = new \Mutagenesis\Mutable(__DIR__ . '/_files/IfClause.php');
         $file->generate();
         $mutations = $file->getMutations();
         $mutation = $mutations[0];
-        $this->assertEquals(dirname(__FILE__) . '/_files/IfClause.php', $mutation['file']);
+        $this->assertEquals(__DIR__ . '/_files/IfClause.php', $mutation['file']);
         $this->assertEquals('Some_Class_With_If_Clause_In_Method', $mutation['class']);
         $this->assertEquals('_getSession', $mutation['method']);
         $this->assertEquals('', $mutation['args']);

@@ -19,16 +19,6 @@
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
-require_once 'Mutagenesis/Renderer/RendererInterface.php';
-
-require_once 'Mutagenesis/Renderer/Text.php';
-
-require_once 'Mutagenesis/Utility/Diff.php';
-
-require_once 'Mutagenesis/Mutation/MutationAbstract.php';
-
-require_once 'Mutagenesis/Mutation/BooleanTrue.php';
-
 class Mutagenesis_Renderer_TextTest extends PHPUnit_Framework_TestCase
 {
 

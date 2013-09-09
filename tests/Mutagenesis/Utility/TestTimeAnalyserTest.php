@@ -24,7 +24,7 @@ class Mutagenesis_TestTimeAnalyserTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->root = dirname(__FILE__) . '/_files/testtimeanalyser';
+        $this->root = __DIR__ . '/_files/testtimeanalyser';
     }
 
     public function testAnalysisOfJunitLogFormatShowsLeastTimeTestCaseFirst()

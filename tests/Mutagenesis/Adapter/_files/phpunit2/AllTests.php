@@ -4,7 +4,7 @@ if (!defined('PHPUnit_MAIN_METHOD')) {
     define('PHPUnit_MAIN_METHOD', 'Mutagenesis_Test2_AllTests::main');
 }
 
-require_once dirname(__FILE__).'/MathTest.php';
+require_once __DIR__ . '/MathTest.php';
 
 class Mutagenesis_Test2_AllTests
 {

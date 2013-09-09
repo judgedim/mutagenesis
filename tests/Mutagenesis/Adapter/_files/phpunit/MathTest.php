@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__).'/Math.php';
+require_once __DIR__ . '/Math.php';
 
 class MM1_MathTest extends PHPUnit_Framework_TestCase
 {

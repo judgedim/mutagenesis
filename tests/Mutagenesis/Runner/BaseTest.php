@@ -19,20 +19,12 @@
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
-require_once 'Mutagenesis/Utility/Runkit.php';
-
-require_once 'Mutagenesis/Runner/RunnerAbstract.php';
-
-require_once 'Mutagenesis/Runner/Base.php';
-
-require_once 'Mutagenesis/Renderer/RendererInterface.php';
-
 class Mutagenesis_RunnerTest extends PHPUnit_Framework_TestCase
 {
 
     public function setUp()
     {
-        $this->root = dirname(dirname(__FILE__)) . '/_files/root/base1';
+        $this->root = dirname(__DIR__) . '/_files/root/base1';
         $this->badRoot = '/path/does/not/exist';
     }
 
@@ -70,14 +62,14 @@ class Mutagenesis_RunnerTest extends PHPUnit_Framework_TestCase
 
     public function testShouldStoreAdapterNameValue()
     {
-        $runner = new\ Mutagenesis\Runner\Base;
+        $runner = new \Mutagenesis\Runner\Base;
         $runner->setAdapterName('PHPSpec');
         $this->assertEquals('PHPSpec', $runner->getAdapterName());
     }
     
     public function testShouldStoreRendererNameValue()
     {
-        $runner = new\ Mutagenesis\Runner\Base;
+        $runner = new \Mutagenesis\Runner\Base;
         $runner->setRendererName('Html');
         $this->assertEquals('Html', $runner->getRendererName());
     }

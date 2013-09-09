@@ -21,8 +21,6 @@
 
 use Mockery as m;
 
-require_once 'Mutagenesis/Adapter/Phpunit.php';
-
 class Mutagenesis_Adapter_PhpunitAdapterTest extends PHPUnit_Framework_TestCase
 {
 
@@ -30,7 +28,7 @@ class Mutagenesis_Adapter_PhpunitAdapterTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->root = dirname(__FILE__) . '/_files';
+        $this->root = __DIR__ . '/_files';
     }
 
     public function tearDown()
@@ -49,9 +47,9 @@ class Mutagenesis_Adapter_PhpunitAdapterTest extends PHPUnit_Framework_TestCase
         $runner = m::mock('\Mutagenesis\Runner\Base');
         $runner->shouldReceive('getOptions')->andReturn(
             array(
-                'src' => dirname(__FILE__) . '/_files/phpunit',
-                'tests' => dirname(__FILE__) . '/_files/phpunit',
-                'base' => dirname(__FILE__) . '/_files/phpunit',
+                'src' => __DIR__ . '/_files/phpunit',
+                'tests' => __DIR__ . '/_files/phpunit',
+                'base' => __DIR__ . '/_files/phpunit',
                 'cache' => sys_get_temp_dir(),
                 'clioptions' => array(),
                 'constraint' => 'MM1_MathTest MathTest.php'
@@ -78,9 +76,9 @@ class Mutagenesis_Adapter_PhpunitAdapterTest extends PHPUnit_Framework_TestCase
         $runner = m::mock('\Mutagenesis\Runner\Base');
         $runner->shouldReceive('getOptions')->andReturn(
             array(
-                'src' => dirname(__FILE__) . '/_files/phpunit2',
-                'tests' => dirname(__FILE__) . '/_files/phpunit2',
-                'base' => dirname(__FILE__) . '/_files/phpunit2',
+                'src' => __DIR__ . '/_files/phpunit2',
+                'tests' => __DIR__ . '/_files/phpunit2',
+                'base' => __DIR__ . '/_files/phpunit2',
                 'cache' => sys_get_temp_dir(),
                 'clioptions' => array(),
                 'constraint' => 'AllTests.php'

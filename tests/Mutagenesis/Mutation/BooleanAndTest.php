@@ -19,8 +19,6 @@
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
-require_once 'Mutagenesis/Mutation/BooleanAnd.php';
-
 class Mutagenesis_Mutation_BooleanAndTest extends PHPUnit_Framework_TestCase
 {
 

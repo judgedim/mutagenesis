@@ -19,8 +19,6 @@
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
-require_once 'Mutagenesis/Utility/Job.php';
-
 class Mutagenesis_JobTest extends PHPUnit_Framework_TestCase
 {
 
