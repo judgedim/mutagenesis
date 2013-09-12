@@ -67,7 +67,7 @@
             <file name="RunnerAbstract.php" role="php"/>
           </dir>
           <dir name="Utility">
-            <dir>
+            <dir name="Diff">
                 <file name="ProviderInterface.php" role="php"/>
                 <file name="PhpUnit.php" role="php"/>
             </dir>
