@@ -21,6 +21,8 @@
 
 namespace Mutagenesis\Mutation;
 
+use Mutagenesis\Utility\Diff;
+
 abstract class MutationAbstract
 {
 
@@ -46,6 +48,13 @@ abstract class MutationAbstract
     protected $_filename;
 
     /**
+     * Diff provider instance.
+     *
+     * @var Diff\ProviderInterface
+     */
+    protected $_diffProvider;
+
+    /**
      * Constructor; sets name and relative path of the file being mutated
      *
      * @param string $filename
@@ -56,11 +65,37 @@ abstract class MutationAbstract
     }
 
     /**
+     * Return the diff provider.
+     *
+     * @return Diff\ProviderInterface
+     */
+    public function getDiffProvider()
+    {
+        if (!$this->_diffProvider) {
+            $this->_diffProvider = new Diff\PhpUnit();
+        }
+        return $this->_diffProvider;
+    }
+
+    /**
+     * Set the diff provider.
+     *
+     * @param Diff\ProviderInterface $provider
+     * @return $this
+     */
+    public function setDiffProvider(Diff\ProviderInterface $provider)
+    {
+        $this->_diffProvider = $provider;
+        return $this;
+    }
+
+    /**
      * Perform a mutation against the given original source code tokens for
      * a mutable element
      *
      * @param array $tokens
      * @param int $index
+     * @return string
      */
     public function mutate($tokens, $index)
     {
@@ -90,7 +125,7 @@ abstract class MutationAbstract
     {
         $original = $this->_reconstructFromTokens($this->_tokensOriginal);
         $mutated = $this->_reconstructFromTokens($this->_tokensMutated);
-        $difference = \Mutagenesis\Utility\Diff::difference($original, $mutated);
+        $difference = $this->getDiffProvider()->difference($original, $mutated);
         return $difference;
     }
 

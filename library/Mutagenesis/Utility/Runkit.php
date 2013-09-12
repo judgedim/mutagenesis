@@ -37,6 +37,7 @@ class Runkit
      * Apply a mutation to the relevant file
      *
      * @param array $mutation
+     * @throws \Exception
      */
     public function applyMutation(array $mutation)
     {
@@ -79,6 +80,7 @@ class Runkit
      * Reverse a previously applied mutation to the given file
      *
      * @param array $mutation
+     * @throws \Exception
      */
     public function reverseMutation(array $mutation)
     {

@@ -165,6 +165,8 @@ abstract class RunnerAbstract
      * Set the base directory of the project being mutated
      *
      * @param string $dir
+     * @return $this
+     * @throws \Mutagenesis\FUTException
      */
     public function setBaseDirectory($dir)
     {
@@ -190,6 +192,8 @@ abstract class RunnerAbstract
      * Set the source directory of the project being mutated
      *
      * @param string $dir
+     * @return $this
+     * @throws \Mutagenesis\FUTException
      */
     public function setSourceDirectory($dir)
     {
@@ -215,6 +219,8 @@ abstract class RunnerAbstract
      * Set the test directory of the project being mutated
      *
      * @param string $dir
+     * @return $this
+     * @throws \Mutagenesis\FUTException
      */
     public function setTestDirectory($dir)
     {
@@ -240,6 +246,8 @@ abstract class RunnerAbstract
      * Set the cache directory of the project being mutated
      *
      * @param string $dir
+     * @return $this
+     * @throws \Mutagenesis\FUTException
      */
     public function setCacheDirectory($dir)
     {
@@ -267,7 +275,8 @@ abstract class RunnerAbstract
     /**
      * Set name of the test adapter to use
      *
-     * @param string $adapter
+     * @param string $constraint
+     * @return $this
      */
     public function setAdapterConstraint($constraint)
     {
@@ -289,6 +298,7 @@ abstract class RunnerAbstract
      * Set name of the test adapter to use
      *
      * @param string $adapter
+     * @return $this
      */
     public function setAdapterName($adapter)
     {
@@ -310,6 +320,7 @@ abstract class RunnerAbstract
      * Options to pass to adapter's underlying command
      *
      * @param string $optionString
+     * @return $this
      */
     public function setAdapterOption($optionString)
     {
@@ -351,6 +362,7 @@ abstract class RunnerAbstract
      * adapter name passed on the CLI if not already set.
      *
      * @return \Mutagenesis\Adapter\AdapterAbstract
+     * @throws \Mutagenesis\FUTException
      */
     public function getAdapter()
     {
@@ -370,17 +382,19 @@ abstract class RunnerAbstract
      * Set a test framework adapter.
      *
      * @param \Mutagenesis\Adapter\AdapterAbstract $adapter
+     * @return $this
      */
     public function setAdapter(\Mutagenesis\Adapter\AdapterAbstract $adapter)
     {
         $this->_adapter = $adapter;
         return $this;
     }
-    
+
     /**
      * Set name of the renderer to use
      *
      * @param string $rname
+     * @return $this
      */
     public function setRendererName($rname)
     {
@@ -403,6 +417,7 @@ abstract class RunnerAbstract
      * renderer name passed on the CLI if not already set.
      *
      * @return \Mutagenesis\Renderer\RendererInterface
+     * @throws \Mutagenesis\FUTException
      */
     public function getRenderer()
     {
@@ -421,17 +436,19 @@ abstract class RunnerAbstract
      * Set a test framework adapter.
      *
      * @param \Mutagenesis\Renderer\RendererInterface $renderer
+     * @return $this
      */
     public function setRenderer(\Mutagenesis\Renderer\RendererInterface $renderer)
     {
         $this->_renderer = $renderer;
         return $this;
     }
-    
+
     /**
      * Set a custom runkit instance.
      *
      * @param \Mutagenesis\Utility\Runkit $runkit
+     * @return $this
      */
     public function setRunkit(\Mutagenesis\Utility\Runkit $runkit)
     {
@@ -547,11 +564,12 @@ abstract class RunnerAbstract
         }
         return $this->_generator;
     }
-    
+
     /**
      * Set timeout in seconds for each test run
      *
      * @param int $timeout
+     * @return $this
      */
     public function setTimeout($timeout)
     {
@@ -568,11 +586,12 @@ abstract class RunnerAbstract
     {
         return $this->_timeout;
     }
-    
+
     /**
      * Set a bootstrap file included before tests run (e.g. setup autoloading)
      *
      * @param string $file
+     * @return $this
      */
     public function setBootstrap($file)
     {
@@ -602,12 +621,13 @@ abstract class RunnerAbstract
         }
         return $this->_bootstrap;
     }
-    
+
     /**
      * Set flag to add detailed reports (including test results) about
      * the mutations which caused test failures (i.e. captured)
      *
      * @param bool $bool
+     * @return $this
      */
     public function setDetailCaptures($bool)
     {
@@ -625,5 +645,4 @@ abstract class RunnerAbstract
     {
         return $this->_detailCaptures;
     }
-    
 }
