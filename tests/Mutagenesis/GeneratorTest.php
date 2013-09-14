@@ -49,12 +49,14 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldCollateAllFilesValidForMutationTesting()
     {
+        $expectedFiles = array(
+            $this->root . '/library/bool1.php',
+            $this->root . '/library/bool2.php',
+        );
         $generator = new Generator();
         $generator->setSourceDirectory($this->root);
-        $this->assertEquals(array(
-            $this->root . '/library/bool2.php',
-            $this->root . '/library/bool1.php'
-        ),$generator->getFiles());
+        $result = $generator->getFiles();
+        $this->assertEquals(sort($expectedFiles), sort($result));
     }
 
     public function testShouldGenerateMutableFileObjects()
