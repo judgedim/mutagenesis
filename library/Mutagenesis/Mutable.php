@@ -23,27 +23,26 @@ namespace Mutagenesis;
 
 class Mutable
 {
-
     /**
      * Name and relative path of the file to be mutated
      *
      * @var string
      */
-    protected $_filename = null;
+    protected $filename = null;
 
     /**
      *  An array of generated mutations to be sequentially tested
      *
      * @var array
      */
-    protected $_mutations = array();
+    protected $mutations = array();
 
     /**
      *  Array of mutable elements located in file
      *
      * @var array
      */
-    protected $_mutables = array();
+    protected $mutables = array();
 
     /**
      * Constructor; sets name and relative path of the file being mutated
@@ -58,12 +57,12 @@ class Mutable
     /**
      * Based on the current file, generate mutations
      *
-     * @return void
+     * @return $this
      */
     public function generate()
     {
-        $this->_mutables = $this->_parseMutables();
-        $this->_parseTokensToMutations($this->_mutables);
+        $this->mutables = $this->_parseMutables();
+        $this->_parseTokensToMutations($this->mutables);
         return $this;
     }
 
@@ -72,7 +71,8 @@ class Mutable
      */
     public function cleanup()
     {
-        unset($this->_mutations, $this->_mutables);
+        $this->mutations = $this->mutables = array();
+        return $this;
     }
 
     /**
@@ -80,11 +80,12 @@ class Mutable
      * mutations.
      *
      * @param string $filename
+     * @return $this
      */
     public function setFilename($filename)
     {
-        // checks
-        $this->_filename = $filename;
+        $this->filename = $filename;
+        return $this;
     }
 
     /**
@@ -95,7 +96,7 @@ class Mutable
      */
     public function getFilename()
     {
-        return $this->_filename;
+        return $this->filename;
     }
 
     /**
@@ -106,7 +107,7 @@ class Mutable
      */
     public function getMutations()
     {
-        return $this->_mutations;
+        return $this->mutations;
     }
 
     /**
@@ -118,7 +119,7 @@ class Mutable
      */
     public function getMutables()
     {
-        return $this->_mutables;
+        return $this->mutables;
     }
 
     /**
@@ -130,10 +131,8 @@ class Mutable
     public function hasMutation($type)
     {
         $typeClass = '\\Mutagenesis\\Mutation\\' . $type;
-        // I know, wtf?!
-        $mutations = array_values(array_values(array_values($this->getMutations())));
-        foreach ($mutations as $mutation) {
-            if ($mutation instanceof $typeClass) {
+        foreach ($this->getMutations() as $mutation) {
+            if ($mutation['mutation'] instanceof $typeClass) {
                 return true;
             }
         }
@@ -160,7 +159,7 @@ class Mutable
                     $mutation = $this->_parseToken($token, $index);
                 }
                 if (!is_null($mutation)) {
-                    $this->_mutations[] = $method + array(
+                    $this->mutations[] = $method + array(
                         'index' => $index,
                         'mutation' => $mutation
                     );
@@ -192,9 +191,6 @@ class Mutable
         }
         if (!empty($type)) {
             $mutationClass =  'Mutagenesis\\Mutation\\' . $type;
-            if (!class_exists($mutationClass)) {
-                require_once str_replace('\\', '/', ltrim($mutationClass, '\\')) . '.php';
-            }
             $mutation = new $mutationClass($this->getFilename());
             return $mutation;
         }
@@ -232,10 +228,6 @@ class Mutable
         }
         if (!empty($type)) {
             $mutationClass =  'Mutagenesis\\Mutation\\' . $type;
-            if (!class_exists($mutationClass)) {
-                // todo: given we're autoloading, could we not just kick up an exception here?
-                require_once str_replace('\\', '/', ltrim($mutationClass, '\\')) . '.php';
-            }
             $mutation = new $mutationClass($this->getFilename());
             return $mutation;
         }
@@ -279,11 +271,9 @@ class Mutable
         $argTokens = array();
         $methods = array();
         $mutable = array();
-        $static = false;
         $staticClassCapture = true;
         foreach ($tokens as $index=>$token) {
             if(is_array($token) && $token[0] == T_STATIC && $staticClassCapture === true) {
-                $static = true;
                 $staticClassCapture = false;
                 continue;
             }
@@ -368,5 +358,4 @@ class Mutable
         }
         return $str;
     }
-    
 }

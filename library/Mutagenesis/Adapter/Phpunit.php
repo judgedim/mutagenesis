@@ -21,6 +21,11 @@
 
 namespace Mutagenesis\Adapter;
 
+use Mutagenesis\Runner\Base as BaseRunner;
+use Mutagenesis\Utility\Job;
+use Mutagenesis\Utility\Process;
+use Mutagenesis\Utility\Runkit;
+
 require_once 'PHPUnit/TextUI/Command.php';
 
 if (class_exists('PHP_CodeCoverage_Filter', true) && method_exists('PHP_CodeCoverage_Filter', 'getInstance')) {
@@ -44,11 +49,11 @@ class Phpunit extends AdapterAbstract
      * @param array $testCases
      * @return array
      */
-    public function runTests(\Mutagenesis\Runner\Base $runner, $useStdout = true,
+    public function runTests(BaseRunner $runner, $useStdout = true,
     $firstRun = false, array $mutation = array(), array $testCases = array())
     {
         $options = $runner->getOptions();
-        $job = new \Mutagenesis\Utility\Job;
+        $job = new Job();
         if(!$useStdout) {
             array_unshift($options['clioptions'], '--stderr');
         }
@@ -109,7 +114,7 @@ class Phpunit extends AdapterAbstract
      */
     public static function execute($jobScript)
     {
-        $output = \Mutagenesis\Utility\Process::run($jobScript);
+        $output = Process::run($jobScript);
         return $output;
     }
 
@@ -147,7 +152,7 @@ class Phpunit extends AdapterAbstract
                         . ' extension suitable for Mutagenesis and PHP 5.3.'
                     );
                 }
-                $runkit = new \Mutagenesis\Utility\Runkit;
+                $runkit = new Runkit();
                 $runkit->applyMutation($mutation);
             }
         }

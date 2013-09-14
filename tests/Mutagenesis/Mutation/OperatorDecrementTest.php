@@ -19,12 +19,15 @@
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
-class Mutagenesis_Mutation_OperatorDecrementTest extends PHPUnit_Framework_TestCase
-{
+namespace MutagenesisTest;
 
+use Mutagenesis\Mutation\OperatorDecrement;
+
+class OperatorDecrementTest extends \PHPUnit_Framework_TestCase
+{
     public function testReturnsTokenEquivalentToIncrementOperator()
     {
-        $mutation = new \Mutagenesis\Mutation\OperatorDecrement;
+        $mutation = new OperatorDecrement();
         $this->assertEquals(
             array(
                 10 => array(T_INC, '++')
@@ -32,5 +35,4 @@ class Mutagenesis_Mutation_OperatorDecrementTest extends PHPUnit_Framework_TestC
             $mutation->getMutation(array(), 10)
         );
     }
-
 }

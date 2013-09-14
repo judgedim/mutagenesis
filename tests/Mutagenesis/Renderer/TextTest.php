@@ -19,12 +19,15 @@
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
-class Mutagenesis_Renderer_TextTest extends PHPUnit_Framework_TestCase
-{
+namespace MutagenesisTest;
 
+use Mutagenesis\Renderer\Text;
+
+class TextTest extends \PHPUnit_Framework_TestCase
+{
     public function setUp()
     {
-        $this->_renderer = new \Mutagenesis\Renderer\Text;
+        $this->_renderer = new Text();
     }
     
     public function testRendersOpeningMessage()
@@ -128,5 +131,4 @@ EXPECTED;
             $this->_renderer->renderReport(1, 0, 1, $mutations, array(), 'test1output')
         );   
     }
-
 }

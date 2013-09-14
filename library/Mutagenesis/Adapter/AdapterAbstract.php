@@ -21,6 +21,8 @@
 
 namespace Mutagenesis\Adapter;
 
+use Mutagenesis\Runner\Base as BaseRunner;
+
 abstract class AdapterAbstract
 {
 
@@ -32,7 +34,7 @@ abstract class AdapterAbstract
      * @var string
      */
     protected $_output = '';
-    
+
     /**
      * Runs the tests suite according to Runner set options and the execution
      * order of test case (if any). It then returns an array of two elements.
@@ -40,14 +42,15 @@ abstract class AdapterAbstract
      * Second element is an array containing the key "stdout" which stores the
      * output from the last test run.
      *
-     * @param \Mutagenesis\Runner\RunnerAbstract $baseRunner
+     * @abstract
+     * @param \Mutagenesis\Runner\Base $runner
      * @param bool $useStdout
      * @param bool $firstRun
      * @param array $mutation
      * @param array $testCases
      * @return array
      */
-    abstract public function runTests(\Mutagenesis\Runner\Base $runner, $useStdout = false,
+    abstract public function runTests(BaseRunner $runner, $useStdout = false,
     $firstRun = false, array $mutation = array(), array $testCases = array());
 
     /**

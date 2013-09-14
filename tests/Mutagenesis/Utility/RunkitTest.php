@@ -19,9 +19,14 @@
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
-class Mutagenesis_RunkitTest extends PHPUnit_Framework_TestCase
-{
+namespace MutagenesisTest;
 
+use Mutagenesis\Utility\Runkit;
+use Mutagenesis\Mutation\OperatorAddition;
+use Mutagenesis\Mutation\MutationAbstract;
+
+class RunkitTest extends \PHPUnit_Framework_TestCase
+{
     public function setUp()
     {
         $this->root = __DIR__ . '/_files';
@@ -36,11 +41,11 @@ class Mutagenesis_RunkitTest extends PHPUnit_Framework_TestCase
             'args' => '$op1,$op2',
             'tokens' => array(array(335,'return',7), array(309,'$op1',7), '+', array(309,'$op2',7), ';'),
             'index' => 2,
-            'mutation' => new \Mutagenesis\Mutation\OperatorAddition($this->root . '/runkit/Math1.php')
+            'mutation' => new OperatorAddition($this->root . '/runkit/Math1.php')
         );
-        $runkit = new \Mutagenesis\Utility\Runkit;
+        $runkit = new Runkit();
         $runkit->applyMutation($mutation);
-        $math = new RunkitTest_Math1;
+        $math = new \RunkitTest_Math1;
         $this->assertEquals(0, $math->add(1,1));
         $runkit->reverseMutation($mutation);
     }
@@ -54,11 +59,11 @@ class Mutagenesis_RunkitTest extends PHPUnit_Framework_TestCase
             'args' => '$op1,$op2',
             'tokens' => array(array(335,'return',7), array(309,'$op1',7), '+', array(309,'$op2',7), ';'),
             'index' => 2,
-            'mutation' => new \Mutagenesis\Mutation\OperatorAddition($this->root . '/runkit/Math1.php')
+            'mutation' => new OperatorAddition($this->root . '/runkit/Math1.php')
         );
-        $runkit = new \Mutagenesis\Utility\Runkit;
+        $runkit = new Runkit();
         $runkit->applyMutation($mutation);
-        $math = new RunkitTest_Math1;
+        $math = new \RunkitTest_Math1;
         $runkit->reverseMutation($mutation);
         $this->assertEquals(2, $math->add(1,1));
     }
@@ -72,11 +77,11 @@ class Mutagenesis_RunkitTest extends PHPUnit_Framework_TestCase
             'args' => '$op1,$op2',
             'tokens' => array(array(335,'return',7), array(309,'$op1',7), '+', array(309,'$op2',7), ';'),
             'index' => 2,
-            'mutation' => new \Mutagenesis\Mutation\OperatorAddition($this->root . '/runkit/Math2.php')
+            'mutation' => new OperatorAddition($this->root . '/runkit/Math2.php')
         );
-        $runkit = new \Mutagenesis\Utility\Runkit;
+        $runkit = new Runkit();
         $runkit->applyMutation($mutation);
-        $this->assertEquals(0, RunkitTest_Math2::add(1,1));
+        $this->assertEquals(0, \RunkitTest_Math2::add(1,1));
         $runkit->reverseMutation($mutation);
     }
 
@@ -89,16 +94,16 @@ class Mutagenesis_RunkitTest extends PHPUnit_Framework_TestCase
             'args' => '$op1,$op2',
             'tokens' => array(array(335,'return',7), array(309,'$op1',7), '+', array(309,'$op2',7), ';'),
             'index' => 2,
-            'mutation' => new \Mutagenesis\Mutation\OperatorAddition($this->root . '/runkit/Math2.php')
+            'mutation' => new OperatorAddition($this->root . '/runkit/Math2.php')
         );
-        $runkit = new \Mutagenesis\Utility\Runkit;
+        $runkit = new Runkit();
         $runkit->applyMutation($mutation);
         $runkit->reverseMutation($mutation);
-        $this->assertEquals(2, RunkitTest_Math2::add(1,1));
+        $this->assertEquals(2, \RunkitTest_Math2::add(1,1));
     }
 }
 
-class StubMutagenesisMutation1 extends \Mutagenesis\Mutation\MutationAbstract
+class StubMutagenesisMutation1 extends MutationAbstract
 {
     public function getMutation(array $tokens, $index){}
 }

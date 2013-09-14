@@ -19,15 +19,18 @@
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
-class Mutagenesis_ProcTest extends PHPUnit_Framework_TestCase
-{
+namespace MutagenesisTest;
 
+use Mutagenesis\Utility\Process;
+
+class ProcessTest extends \PHPUnit_Framework_TestCase
+{
     /**
      * @group separateprocess
      */
     public function testExecutesGivenScriptInSeparateProcess()
     {
-        $process = new \Mutagenesis\Utility\Process;
+        $process = new Process();
         $return = $process->run(
             "<?php echo 'It\'s alive!';"
         );
@@ -39,7 +42,7 @@ class Mutagenesis_ProcTest extends PHPUnit_Framework_TestCase
      */
     public function testSeparateProcessCompletesPreTimeout()
     {
-        $process = new \Mutagenesis\Utility\Process;
+        $process = new Process();
         $timeout = 120;
         $job = <<<JOB
 <?php
@@ -77,8 +80,7 @@ JOB;
      */
     public function testSeparateProcessCanTimeout()
     {
-        $process = new \Mutagenesis\Utility\Process;
-        $timeout = 1;
+        $process = new Process();
         $job = <<<JOB
 <?php
 namespace MutagenesisEnv;
@@ -115,7 +117,7 @@ JOB;
      */
     public function testSeparateProcessCanThrowExceptions()
     {
-        $process = new \Mutagenesis\Utility\Process;
+        $process = new Process();
         $timeout = 120;
         $job = <<<JOB
 <?php
@@ -146,5 +148,4 @@ JOB;
         $return = $process->run($job);
         $this->assertEquals('MUTAGENESIS-TIMEOUT-EXCEPTION', $return['stdout']);
     }
-   
 }

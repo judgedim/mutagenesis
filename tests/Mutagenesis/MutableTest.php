@@ -19,97 +19,142 @@
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
-class Mutagenesis_MutableTest extends PHPUnit_Framework_TestCase
-{
+namespace MutagenesisTest;
 
+use Mutagenesis\Mutable;
+
+class MutableTest extends \PHPUnit_Framework_TestCase
+{
+    /**
+     * @var string
+     */
     protected $root = '';
 
+    /**
+     * @return void
+     */
     public function setUp()
     {
         $this->root = __DIR__ . '/_files/root/base2/library';
     }
 
-    public function testShouldMaintainFilePathInfoOncePassedInConstructor()
+    /**
+     * @test
+     */
+    public function shouldMaintainFilePathInfoOncePassedInConstructor()
     {
-        $file = new \Mutagenesis\Mutable($this->root . '/foo.php');
+        $file = new Mutable($this->root . '/foo.php');
         $this->assertEquals($this->root . '/foo.php', $file->getFilename());
     }
 
-    public function testShouldNotHaveMutationsBeforeGeneration()
+    /**
+     * @test
+     */
+    public function shouldNotHaveMutationsBeforeGeneration()
     {
-        $file = new \Mutagenesis\Mutable($this->root . '/math1.php');
+        $file = new Mutable($this->root . '/math1.php');
         $this->assertEquals(array(), $file->getMutations());
     }
 
-    public function testShouldNotHaveDetectedMutablesBeforeGeneration()
+    /**
+     * @test
+     */
+    public function shouldNotHaveDetectedMutablesBeforeGeneration()
     {
-        $file = new \Mutagenesis\Mutable($this->root . '/math1.php');
+        $file = new Mutable($this->root . '/math1.php');
         $this->assertEquals(array(), $file->getMutables());
     }
 
-    public function testShouldNotGenerateMutablesForEmptyClass()
+    /**
+     * @test
+     */
+    public function shouldNotGenerateMutablesForEmptyClass()
     {
-        $file = new \Mutagenesis\Mutable($this->root . '/math0.php');
+        $file = new Mutable($this->root . '/math0.php');
         $file->generate();
         $this->assertEquals(array(), $file->getMutables());
     }
 
-    public function testShouldNotgenerateForEmptyClass()
+    /**
+     * @test
+     */
+    public function shouldNotgenerateForEmptyClass()
     {
-        $file = new \Mutagenesis\Mutable($this->root . '/math0.php');
+        $file = new Mutable($this->root . '/math0.php');
         $file->generate();
         $this->assertEquals(array(), $file->getMutations());
     }
 
-    public function testShouldNotGenerateMutationsIfOnlyEmptyMethodsInClass()
+    /**
+     * @test
+     */
+    public function shouldNotGenerateMutationsIfOnlyEmptyMethodsInClass()
     {
-        $file = new \Mutagenesis\Mutable($this->root . '/math00.php');
+        $file = new Mutable($this->root . '/math00.php');
         $file->generate();
         $this->assertEquals(array(), $file->getMutations());
     }
 
-    public function testShouldGenerateMutablesEvenIfMethodBodyIsNotViable()
+    /**
+     * @test
+     */
+    public function shouldGenerateMutablesEvenIfMethodBodyIsNotViable()
     {
-        $file = new \Mutagenesis\Mutable($this->root . '/math000.php');
+        $file = new Mutable($this->root . '/math000.php');
         $file->generate();
         $return = $file->getMutables();
-        $this->assertEquals(array('file','class','method','args','tokens'),array_keys($return[0]));
+        $this->assertEquals(array('file', 'class', 'method', 'args', 'tokens'), array_keys($return[0]));
     }
 
-    public function testShouldNotGenerateMutablesIfMethodBodyIsNotViable()
+    /**
+     * @test
+     */
+    public function shouldNotGenerateMutablesIfMethodBodyIsNotViable()
     {
-        $file = new \Mutagenesis\Mutable($this->root . '/math000.php');
+        $file = new Mutable($this->root . '/math000.php');
         $file->generate();
         $this->assertEquals(array(), $file->getMutations());
     }
 
-    public function testShouldGenerateAMutationIfPossible()
+    /**
+     * @test
+     */
+    public function shouldGenerateAMutationIfPossible()
     {
-        $file = new \Mutagenesis\Mutable($this->root . '/math1.php');
+        $file = new Mutable($this->root . '/math1.php');
         $file->generate();
         $return = $file->getMutations();
-        $this->assertEquals(array('file','class','method','args','tokens','index','mutation'),array_keys($return[0]));
+        $this->assertEquals(array('file', 'class', 'method', 'args', 'tokens', 'index', 'mutation'), array_keys($return[0]));
     }
 
-    public function testShouldReturnMutationsAsMutantObjectWrappers()
+    /**
+     * @test
+     */
+    public function shouldReturnMutationsAsMutantObjectWrappers()
     {
-        $file = new \Mutagenesis\Mutable($this->root . '/math1.php');
+        $file = new Mutable($this->root . '/math1.php');
         $file->generate();
         $return = $file->getMutations();
-        $this->assertTrue($return[0]['mutation'] instanceof \Mutagenesis\Mutation\MutationAbstract);
+        $this->assertInstanceOf('\Mutagenesis\Mutation\MutationAbstract', $return[0]['mutation']);
     }
 
-    public function testShouldDetectMutablesForClassesInSameFileSeparately()
+    /**
+     * @test
+     */
+    public function shouldDetectMutablesForClassesInSameFileSeparately()
     {
-        $file = new \Mutagenesis\Mutable($this->root . '/mathx2.php');
+        $file = new Mutable($this->root . '/mathx2.php');
         $file->generate();
         $return = $file->getMutables();
         $this->assertEquals('Math2', $return[1]['class']);
     }
 
-    public function testShouldDetectMutationsForClassesInSameFileSeparately()
+    /**
+     * @test
+     */
+    public function shouldDetectMutationsForClassesInSameFileSeparately()
     {
-        $file = new \Mutagenesis\Mutable($this->root . '/mathx2.php');
+        $file = new Mutable($this->root . '/mathx2.php');
         $file->generate();
         $return = $file->getMutations();
         $this->assertEquals('Math2', $return[1]['class']);
@@ -118,53 +163,116 @@ class Mutagenesis_MutableTest extends PHPUnit_Framework_TestCase
 
     // Ensure correct class is returned as a mutation
 
-
-    public function testShouldGenerateAdditionOperatorMutationWhenPlusSignDetected()
+    /**
+     * @test
+     */
+    public function shouldGenerateAdditionOperatorMutationWhenPlusSignDetected()
     {
-        $file = new \Mutagenesis\Mutable($this->root . '/math1.php');
+        $file = new Mutable($this->root . '/math1.php');
         $file->generate();
         $return = $file->getMutations();
-        $this->assertTrue($return[0]['mutation'] instanceof \Mutagenesis\Mutation\OperatorAddition);
+        $this->assertEquals(1, count($return));
+        $this->assertInstanceOf('\Mutagenesis\Mutation\OperatorAddition', $return[0]['mutation']);
+        $this->assertTrue($file->hasMutation('OperatorAddition'));
+        $this->assertFalse($file->hasMutation('OperatorSubtraction'));
     }
 
-    public function testShouldGenerateSubtractionOperatorMutationWhenMinusSignDetected()
+    /**
+     * @test
+     */
+    public function shouldGenerateSubtractionOperatorMutationWhenMinusSignDetected()
     {
-        $file = new \Mutagenesis\Mutable($this->root . '/math2.php');
+        $file = new Mutable($this->root . '/math2.php');
         $file->generate();
         $return = $file->getMutations();
-        $this->assertTrue($return[0]['mutation'] instanceof \Mutagenesis\Mutation\OperatorSubtraction);
+        $this->assertEquals(1, count($return));
+        $this->assertInstanceOf('\Mutagenesis\Mutation\OperatorSubtraction', $return[0]['mutation']);
+        $this->assertTrue($file->hasMutation('OperatorSubtraction'));
+        $this->assertFalse($file->hasMutation('OperatorAddition'));
     }
 
-    public function testShouldGenerateIncrementOperatorMutationWhenPostIncrementDetected()
+    /**
+     * @test
+     */
+    public function shouldGenerateIncrementOperatorMutationWhenPostIncrementDetected()
     {
-        $file = new \Mutagenesis\Mutable($this->root . '/math3.php');
+        $file = new Mutable($this->root . '/math3.php');
         $file->generate();
         $return = $file->getMutations();
-        $this->assertTrue($return[0]['mutation'] instanceof \Mutagenesis\Mutation\OperatorIncrement);
+        $this->assertEquals(1, count($return));
+        $this->assertInstanceOf('\Mutagenesis\Mutation\OperatorIncrement', $return[0]['mutation']);
+        $this->assertTrue($file->hasMutation('OperatorIncrement'));
+        $this->assertFalse($file->hasMutation('OperatorAddition'));
     }
 
-    public function testShouldGenerateIncrementOperatorMutationWhenPreIncrementDetected()
+    /**
+     * @test
+     */
+    public function shouldGenerateIncrementOperatorMutationWhenPreIncrementDetected()
     {
-        $file = new \Mutagenesis\Mutable($this->root . '/math4.php');
+        $file = new Mutable($this->root . '/math4.php');
         $file->generate();
         $return = $file->getMutations();
-        $this->assertTrue($return[0]['mutation'] instanceof \Mutagenesis\Mutation\OperatorIncrement);
+        $this->assertEquals(1, count($return));
+        $this->assertInstanceOf('\Mutagenesis\Mutation\OperatorIncrement', $return[0]['mutation']);
+        $this->assertTrue($file->hasMutation('OperatorIncrement'));
+        $this->assertFalse($file->hasMutation('OperatorAddition'));
     }
 
-    public function testShouldGenerateBooleanTrueMutationWhenBoolTrueDetected()
+    /**
+     * @test
+     */
+    public function shouldGenerateBooleanTrueMutationWhenBoolTrueDetected()
     {
-        $file = new \Mutagenesis\Mutable($this->root . '/bool1.php');
+        $file = new Mutable($this->root . '/bool1.php');
         $file->generate();
         $return = $file->getMutations();
-        $this->assertTrue($return[0]['mutation'] instanceof \Mutagenesis\Mutation\BooleanTrue);
+        $this->assertEquals(1, count($return));
+        $this->assertInstanceOf('\Mutagenesis\Mutation\BooleanTrue', $return[0]['mutation']);
+        $this->assertTrue($file->hasMutation('BooleanTrue'));
+        $this->assertFalse($file->hasMutation('OperatorAddition'));
     }
 
-    public function testShouldGenerateBooleanFalseMutationWhenBoolFalseDetected()
+    /**
+     * @test
+     */
+    public function shouldGenerateBooleanFalseMutationWhenBoolFalseDetected()
     {
-        $file = new \Mutagenesis\Mutable($this->root . '/bool2.php');
+        $file = new Mutable($this->root . '/bool2.php');
         $file->generate();
         $return = $file->getMutations();
-        $this->assertTrue($return[0]['mutation'] instanceof \Mutagenesis\Mutation\BooleanFalse);
+        $this->assertEquals(1, count($return));
+        $this->assertInstanceOf('\Mutagenesis\Mutation\BooleanFalse', $return[0]['mutation']);
+        $this->assertTrue($file->hasMutation('BooleanFalse'));
+        $this->assertFalse($file->hasMutation('OperatorAddition'));
+    }
+
+    /**
+     * @test
+     */
+    public function cleanupShouldResetMutationsAndMutables()
+    {
+        $file = new Mutable($this->root . '/bool2.php');
+        $file->generate();
+        $mutations = $file->getMutations();
+        $mutables = $file->getMutables();
+
+        $this->assertGreaterThan(0, count($mutations));
+        $this->assertGreaterThan(0, count($mutables));
+
+        $file->cleanup();
+
+        $this->assertEquals(array(), $file->getMutations());
+        $this->assertEquals(array(), $file->getMutables());
+    }
+
+    /**
+     * @test
+     */
+    public function cleanupShouldImplementsFluentInterface()
+    {
+        $file = new Mutable($this->root . '/bool2.php');
+        $this->assertSame($file, $file->cleanup());
     }
     
     /**
@@ -176,7 +284,7 @@ class Mutagenesis_MutableTest extends PHPUnit_Framework_TestCase
      */
     public function testCreatesAccurateMapOfIfClausesSingleNonStaticMethod()
     {
-        $file = new \Mutagenesis\Mutable(__DIR__ . '/_files/IfClause.php');
+        $file = new Mutable(__DIR__ . '/_files/IfClause.php');
         $file->generate();
         $mutations = $file->getMutations();
         $mutation = $mutations[0];

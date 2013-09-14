@@ -36,5 +36,4 @@ class OperatorIncrement extends MutationAbstract
         $tokens[$index][1] = '--';
         return $tokens;
     }
-
 }

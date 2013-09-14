@@ -36,5 +36,4 @@ class BooleanAnd extends MutationAbstract
         $tokens[$index][1] = '||';
         return $tokens;
     }
-
 }

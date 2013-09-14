@@ -21,6 +21,8 @@
 
 namespace Mutagenesis\Runner;
 
+use Mutagenesis\Utility\TestTimeAnalyser;
+
 class Base extends RunnerAbstract
 {
     
@@ -62,7 +64,7 @@ class Base extends RunnerAbstract
          * or custom cache directory by first run.
          */
         //echo $renderer->renderPretestTimeAnalysisInProgress(); // TODO
-        $timeAnalysis = new \Mutagenesis\Utility\TestTimeAnalyser(
+        $timeAnalysis = new TestTimeAnalyser(
             $this->getCacheDirectory() . '/mutagenesis.xml'
         );
         $orderedTestCases = $timeAnalysis->process();

@@ -19,9 +19,12 @@
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
-class Mutagenesis_TestTimeAnalyserTest extends \PHPUnit_Framework_TestCase
-{
+namespace MutagenesisTest;
 
+use Mutagenesis\Utility\TestTimeAnalyser;
+
+class TestTimeAnalyserTest extends \PHPUnit_Framework_TestCase
+{
     public function setUp()
     {
         $this->root = __DIR__ . '/_files/testtimeanalyser';
@@ -30,10 +33,9 @@ class Mutagenesis_TestTimeAnalyserTest extends \PHPUnit_Framework_TestCase
     public function testAnalysisOfJunitLogFormatShowsLeastTimeTestCaseFirst()
     {
         $file = $this->root . '/mutagenesis.xml';
-        $analyser = new \Mutagenesis\Utility\TestTimeAnalyser($file);
+        $analyser = new TestTimeAnalyser($file);
         $analysis = $analyser->process();
         $first = array_shift($analysis);
         $this->assertEquals('/home/sb/ArrayTest2.php', $first['file']);
     }
-    
 }

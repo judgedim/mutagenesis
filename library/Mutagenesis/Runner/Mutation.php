@@ -23,7 +23,6 @@ namespace Mutagenesis\Runner;
 
 class Mutation extends RunnerAbstract
 {
-
     /**
      * Array containing all data and objects required for applying a mutation
      *
@@ -69,20 +68,25 @@ class Mutation extends RunnerAbstract
     {
         $this->_mutation = unserialize($mutation);
     }
-    
+
     /**
      * Get the applicable mutation for this run
      *
-     * @param string $mutation Serialized mutation data
+     * @return array
      */
     public function getMutation()
     {
         return $this->_mutation;
     }
 
+    /**
+     * @param string $testCases
+     * @return $this
+     */
     public function setTestCasesInExecutionOrder($testCases)
     {
-        $this->_testCasesInExecutionOrder = unserlialize($testCases);
+        $this->_testCasesInExecutionOrder = unserialize($testCases);
+        return $this;
     }
 
 }

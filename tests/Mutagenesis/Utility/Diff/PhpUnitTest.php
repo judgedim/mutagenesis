@@ -19,7 +19,11 @@
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
-class Mutagenesis_Diff_PhpUnitTest extends PHPUnit_Framework_TestCase
+namespace MutagenesisTest;
+
+use Mutagenesis\Utility\Diff\PhpUnit;
+
+class PhpUnitTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \Mutagenesis\Utility\Diff\PhpUnit
@@ -31,7 +35,7 @@ class Mutagenesis_Diff_PhpUnitTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->provider = new \Mutagenesis\Utility\Diff\PhpUnit();
+        $this->provider = new PhpUnit();
     }
 
     public function testInstanseOfProviderInterface()

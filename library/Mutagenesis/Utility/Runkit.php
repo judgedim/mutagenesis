@@ -23,7 +23,6 @@ namespace Mutagenesis\Utility;
 
 class Runkit
 {
-
     /**
      * Method signature hash appended to a replaced method's name so it can
      * be reinstated later without any need to separately store entire method

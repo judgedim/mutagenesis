@@ -19,13 +19,16 @@
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
-class Mutagenesis_JobTest extends PHPUnit_Framework_TestCase
-{
+namespace MutagenesisTest;
 
+use Mutagenesis\Utility\Job;
+
+class JobTest extends \PHPUnit_Framework_TestCase
+{
     public function testGenerateReturnsPHPScriptRenderedWithCurrentRunnersSettingsAndSerialisedMutationArray()
     {
-        $job = new \Mutagenesis\Utility\Job;
-        $script = $job->generate(array('a', '1', new stdClass));
+        $job = new Job();
+        $script = $job->generate(array('a', '1', new \stdClass));
         $expected = <<<EXPECTED
 <?php
 namespace MutagenesisEnv;
@@ -58,5 +61,4 @@ pcntl_alarm(0);
 EXPECTED;
         $this->assertEquals($expected, $script);
     }
-   
 }

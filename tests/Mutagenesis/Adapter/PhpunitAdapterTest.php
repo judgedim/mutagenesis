@@ -19,11 +19,13 @@
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
+namespace MutagenesisTest;
+
+use Mutagenesis\Adapter\Phpunit;
 use Mockery as m;
 
-class Mutagenesis_Adapter_PhpunitAdapterTest extends PHPUnit_Framework_TestCase
+class PhpunitAdapterTest extends \PHPUnit_Framework_TestCase
 {
-
     protected $bootstrap = null;
 
     public function setUp()
@@ -59,7 +61,7 @@ class Mutagenesis_Adapter_PhpunitAdapterTest extends PHPUnit_Framework_TestCase
             'getBootstrap' => null,
             'getTimeout' => 1200
         ));
-        $adapter = new \Mutagenesis\Adapter\Phpunit;
+        $adapter = new Phpunit();
         $result = $adapter->runTests(
             $runner,
             true, 
@@ -88,7 +90,7 @@ class Mutagenesis_Adapter_PhpunitAdapterTest extends PHPUnit_Framework_TestCase
             'getBootstrap' => null,
             'getTimeout' => 1200
         ));
-        $adapter = new \Mutagenesis\Adapter\Phpunit;
+        $adapter = new Phpunit();
         $result = $adapter->runTests(
             $runner,
             true, 
@@ -115,7 +117,7 @@ class Mutagenesis_Adapter_PhpunitAdapterTest extends PHPUnit_Framework_TestCase
             'getBootstrap' => null,
             'getTimeout' => 1200
         ));
-        $adapter = new \Mutagenesis\Adapter\Phpunit;
+        $adapter = new Phpunit();
         $result = $adapter->runTests(
             $runner,
             true, 
@@ -139,7 +141,7 @@ class Mutagenesis_Adapter_PhpunitAdapterTest extends PHPUnit_Framework_TestCase
             'getBootstrap' => null,
             'getTimeout' => 1200
         ));
-        $adapter = new \Mutagenesis\Adapter\Phpunit;
+        $adapter = new Phpunit();
         $result = $adapter->runTests(
             $runner,
             true, 
@@ -163,7 +165,7 @@ class Mutagenesis_Adapter_PhpunitAdapterTest extends PHPUnit_Framework_TestCase
             'getBootstrap' => null,
             'getTimeout' => 1200
         ));
-        $adapter = new \Mutagenesis\Adapter\Phpunit;
+        $adapter = new Phpunit();
         $result = $adapter->runTests(
             $runner,
             true, 
@@ -187,7 +189,7 @@ class Mutagenesis_Adapter_PhpunitAdapterTest extends PHPUnit_Framework_TestCase
             'getBootstrap' => null,
             'getTimeout' => 1200
         ));
-        $adapter = new \Mutagenesis\Adapter\Phpunit;
+        $adapter = new Phpunit();
         $result = $adapter->runTests(
             $runner,
             true, 
@@ -198,7 +200,7 @@ class Mutagenesis_Adapter_PhpunitAdapterTest extends PHPUnit_Framework_TestCase
     
     public function testAdapterOutputProcessingDetectsFailOverMultipleLinesWithNoDepOnFinalStatusReport()
     {
-        $adapter = new \Mutagenesis\Adapter\Phpunit;
+        $adapter = new Phpunit();
         $output = <<<OUTPUT
 PHPUnit 3.4.12 by Sebastian Bergmann.
 
@@ -230,7 +232,7 @@ OUTPUT;
             'getBootstrap' => null,
             'getTimeout' => 1200
         ));
-        $adapter = new \Mutagenesis\Adapter\Phpunit;
+        $adapter = new Phpunit();
         $result = $adapter->runTests(
             $runner,
             true, 
@@ -265,7 +267,7 @@ OUTPUT;
             'getBootstrap' => null,
             'getTimeout' => 1200
         ));
-        $adapter = new \Mutagenesis\Adapter\Phpunit;
+        $adapter = new Phpunit();
         $result = $adapter->runTests(
             $runner,
             true, 
@@ -300,7 +302,7 @@ OUTPUT;
             'getBootstrap' => null,
             'getTimeout' => 1200
         ));
-        $adapter = new \Mutagenesis\Adapter\Phpunit;
+        $adapter = new Phpunit();
         $result = $adapter->runTests(
             $runner,
             true, 
@@ -335,7 +337,7 @@ OUTPUT;
             'getBootstrap' => null,
             'getTimeout' => 1200
         ));
-        $adapter = new \Mutagenesis\Adapter\Phpunit;
+        $adapter = new Phpunit();
         $result = $adapter->runTests(
             $runner,
             true, 
@@ -354,5 +356,4 @@ OUTPUT;
         );
         $this->assertTrue($adapter->processOutput($result[1]['stdout']));
     }
-
 }

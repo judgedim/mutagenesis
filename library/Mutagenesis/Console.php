@@ -21,9 +21,11 @@
 
 namespace Mutagenesis;
 
+use Mutagenesis\Runner\RunnerAbstract;
+use Mutagenesis\Runner\Base as BaseRunner;
+
 class Console
 {
-
     /**
      * Options passed across the command line parsed by getopt()
      *
@@ -38,8 +40,7 @@ class Console
      * @param array $options
      * @param \Mutagenesis\Runner\RunnerAbstract $runner Optional custom runner
      */
-    public static function main(array $options = null,
-    \Mutagenesis\Runner\RunnerAbstract $runner = null)
+    public static function main(array $options = null, RunnerAbstract $runner = null)
     {
         if (is_null($options)) {
             self::$_options = getopt(
@@ -61,7 +62,7 @@ class Console
         }
 
         if (is_null($runner)) {
-            $runner = new \Mutagenesis\Runner\Base;
+            $runner = new BaseRunner();
         }
 
         self::setBaseDirectory($runner);
@@ -83,7 +84,7 @@ class Console
      *
      * @param \Mutagenesis\Runner\RunnerAbstract $runner
      */
-    protected static function setBaseDirectory(\Mutagenesis\Runner\RunnerAbstract $runner)
+    protected static function setBaseDirectory(RunnerAbstract $runner)
     {
         if (isset(self::$_options['base'])) {
             $runner->setBaseDirectory(self::$_options['base']);
@@ -97,7 +98,7 @@ class Console
      *
      * @param \Mutagenesis\Runner\RunnerAbstract $runner
      */
-    protected static function setSourceDirectory(\Mutagenesis\Runner\RunnerAbstract $runner)
+    protected static function setSourceDirectory(RunnerAbstract $runner)
     {
         if (isset(self::$_options['src'])) {
             $runner->setSourceDirectory(self::$_options['src']);
@@ -111,7 +112,7 @@ class Console
      *
      * @param \Mutagenesis\Runner\RunnerAbstract $runner
      */
-    protected static function setTestDirectory(\Mutagenesis\Runner\RunnerAbstract $runner)
+    protected static function setTestDirectory(RunnerAbstract $runner)
     {
         if (isset(self::$_options['tests'])) {
             $runner->setTestDirectory(self::$_options['tests']);
@@ -126,7 +127,7 @@ class Console
      *
      * @param \Mutagenesis\Runner\RunnerAbstract $runner
      */
-    protected static function setAdapterName(\Mutagenesis\Runner\RunnerAbstract $runner)
+    protected static function setAdapterName(RunnerAbstract $runner)
     {
         if (isset(self::$_options['adapter'])) {
             $runner->setAdapterName(self::$_options['adapter']);
@@ -141,7 +142,7 @@ class Console
      *
      * @param \Mutagenesis\Runner\RunnerAbstract $runner
      */
-    protected static function setAdapterOptions(\Mutagenesis\Runner\RunnerAbstract $runner)
+    protected static function setAdapterOptions(RunnerAbstract $runner)
     {
         if (isset(self::$_options['options'])) {
             $runner->setAdapterOption(self::$_options['options']);
@@ -154,7 +155,7 @@ class Console
      *
      * @param \Mutagenesis\Runner\RunnerAbstract $runner
      */
-    protected static function setTimeout(\Mutagenesis\Runner\RunnerAbstract $runner)
+    protected static function setTimeout(RunnerAbstract $runner)
     {
         if (isset(self::$_options['timeout'])) {
             $runner->setTimeout(self::$_options['timeout']);
@@ -168,7 +169,7 @@ class Console
      *
      * @param \Mutagenesis\Runner\RunnerAbstract $runner
      */
-    protected static function setBootstrap(\Mutagenesis\Runner\RunnerAbstract $runner)
+    protected static function setBootstrap(RunnerAbstract $runner)
     {
         if (isset(self::$_options['bootstrap'])) {
             $runner->setBootstrap(self::$_options['bootstrap']);
@@ -181,7 +182,7 @@ class Console
      *
      * @param \Mutagenesis\Runner\RunnerAbstract $runner
      */
-    protected static function setDetailCaptures(\Mutagenesis\Runner\RunnerAbstract $runner)
+    protected static function setDetailCaptures(RunnerAbstract $runner)
     {
         if (isset(self::$_options['detail-captures'])) {
             $runner->setDetailCaptures(true);
@@ -194,11 +195,10 @@ class Console
      *
      * @param \Mutagenesis\Runner\RunnerAbstract $runner
      */
-    protected static function setAdapterConstraint(\Mutagenesis\Runner\RunnerAbstract $runner)
+    protected static function setAdapterConstraint(RunnerAbstract $runner)
     {
         if (isset(self::$_options['constraint'])) {
             $runner->setAdapterConstraint(self::$_options['constraint']);
         }
     }
-    
 }

@@ -23,11 +23,13 @@ namespace Mutagenesis\Utility;
 
 class Job
 {
-    
     /**
      * Generate a new Job script to be executed under a separate PHP process
      *
      * @param array $mutation Mutation data and objects to be used
+     * @param array $args
+     * @param int $timeout
+     * @param string|null $bootstrap
      * @return string
      */
     public function generate(array $mutation = array(), array $args = array(), $timeout = 60, $bootstrap = null)

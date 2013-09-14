@@ -48,9 +48,10 @@
 
 namespace Mutagenesis\Utility;
 
+use Mutagenesis\FUTException;
+
 class Process
 {
-
     /**
      * PHP binary path for the current operating system
      *
@@ -68,7 +69,7 @@ class Process
         1 => array('pipe', 'w'),
         2 => array('pipe', 'w')
     );
-    
+
     /**
      * Opens a new process to execute PHP on the source code passed
      * to the method. If you're looking for how this process can be timed
@@ -76,6 +77,8 @@ class Process
      * source code to be executed.
      *
      * @param string $source
+     * @throws \Mutagenesis\FUTException
+     * @return array
      */
     public static function run($source)
     {
@@ -98,14 +101,14 @@ class Process
             );
             return $return;
         } else {
-            throw new \Mutagenesis\FUTException('Unable to open a new process');
+            throw new FUTException('Unable to open a new process');
         }
     }
     
     /**
      * Locate a relevant PHP binary for the operating system
      *
-     * @return void
+     * @return string
      */
     protected static function _getPhpBinary()
     {

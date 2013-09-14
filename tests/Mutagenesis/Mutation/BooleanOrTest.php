@@ -19,12 +19,15 @@
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
-class Mutagenesis_Mutation_BooleanOrTest extends PHPUnit_Framework_TestCase
-{
+namespace MutagenesisTest;
 
+use Mutagenesis\Mutation\BooleanOr;
+
+class BooleanOrTest extends \PHPUnit_Framework_TestCase
+{
     public function testReturnsTokenEquivalentToBooleanAnd()
     {
-        $mutation = new \Mutagenesis\Mutation\BooleanOr;
+        $mutation = new BooleanOr();
         $this->assertEquals(
             array(
                 10 => array(T_BOOLEAN_AND, '&&')
@@ -32,5 +35,4 @@ class Mutagenesis_Mutation_BooleanOrTest extends PHPUnit_Framework_TestCase
             $mutation->getMutation(array(), 10)
         );
     }
-
 }

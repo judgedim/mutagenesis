@@ -19,9 +19,12 @@
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
+namespace MutagenesisTest;
+
+use Mutagenesis\Adapter\AdapterAbstract;
 use Mockery as m;
 
-class Mutagenesis_Adapter_AdapterAbstractTest extends PHPUnit_Framework_TestCase
+class AdapterAbstractTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \Mutagenesis\Adapter\AdapterAbstract

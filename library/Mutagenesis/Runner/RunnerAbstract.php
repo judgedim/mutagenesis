@@ -21,6 +21,12 @@
 
 namespace Mutagenesis\Runner;
 
+use Mutagenesis\Renderer\RendererInterface;
+use Mutagenesis\Utility\Runkit;
+use Mutagenesis\FUTException;
+use Mutagenesis\Generator;
+use Mutagenesis\Adapter\AdapterAbstract;
+
 abstract class RunnerAbstract
 {
 
@@ -172,7 +178,7 @@ abstract class RunnerAbstract
     {
         $dir = rtrim($dir, ' \\/');
         if (!is_dir($dir) || !is_readable($dir)) {
-            throw new \Mutagenesis\FUTException('Invalid base directory: "'.$dir.'"');
+            throw new FUTException('Invalid base directory: "'.$dir.'"');
         }
         $this->_baseDirectory = $dir;
         return $this;
@@ -199,7 +205,7 @@ abstract class RunnerAbstract
     {
         $dir = rtrim($dir, ' \\/');
         if (!is_dir($dir) || !is_readable($dir)) {
-            throw new \Mutagenesis\FUTException('Invalid source directory: "'.$dir.'"');
+            throw new FUTException('Invalid source directory: "'.$dir.'"');
         }
         $this->_sourceDirectory = $dir;
         return $this;
@@ -226,7 +232,7 @@ abstract class RunnerAbstract
     {
         $dir = rtrim($dir, ' \\/');
         if (!is_dir($dir) || !is_readable($dir)) {
-            throw new \Mutagenesis\FUTException('Invalid test directory: "'.$dir.'"');
+            throw new FUTException('Invalid test directory: "'.$dir.'"');
         }
         $this->_testDirectory = $dir;
         return $this;
@@ -253,7 +259,7 @@ abstract class RunnerAbstract
     {
         $dir = rtrim($dir, ' \\/');
         if (!is_dir($dir) || !is_readable($dir)) {
-            throw new \Mutagenesis\FUTException('Invalid cache directory: "'.$dir.'"');
+            throw new FUTException('Invalid cache directory: "'.$dir.'"');
         }
         $this->_cacheDirectory = $dir;
         return $this;
@@ -371,7 +377,7 @@ abstract class RunnerAbstract
             $file = '/Adapter/' . $name . '.php';
             $class = 'Mutagenesis\\Adapter\\' . $name;
             if (!file_exists(dirname(dirname(__FILE__)) . $file)) {
-                throw new \Mutagenesis\FUTException('Invalid Adapter name: ' . strtolower($name));
+                throw new FUTException('Invalid Adapter name: ' . strtolower($name));
             }
             $this->_adapter = new $class;
         }
@@ -384,7 +390,7 @@ abstract class RunnerAbstract
      * @param \Mutagenesis\Adapter\AdapterAbstract $adapter
      * @return $this
      */
-    public function setAdapter(\Mutagenesis\Adapter\AdapterAbstract $adapter)
+    public function setAdapter(AdapterAbstract $adapter)
     {
         $this->_adapter = $adapter;
         return $this;
@@ -425,7 +431,7 @@ abstract class RunnerAbstract
             $name = ucfirst(strtolower($this->getRendererName()));
             $class = 'Mutagenesis\\Renderer\\' . $name;
             if (!class_exists($class)) {
-                throw new \Mutagenesis\FUTException('Invalid Renderer name: ' . strtolower($name));
+                throw new FUTException('Invalid Renderer name: ' . strtolower($name));
             }
             $this->_renderer = new $class;
         }
@@ -438,7 +444,7 @@ abstract class RunnerAbstract
      * @param \Mutagenesis\Renderer\RendererInterface $renderer
      * @return $this
      */
-    public function setRenderer(\Mutagenesis\Renderer\RendererInterface $renderer)
+    public function setRenderer(RendererInterface $renderer)
     {
         $this->_renderer = $renderer;
         return $this;
@@ -450,7 +456,7 @@ abstract class RunnerAbstract
      * @param \Mutagenesis\Utility\Runkit $runkit
      * @return $this
      */
-    public function setRunkit(\Mutagenesis\Utility\Runkit $runkit)
+    public function setRunkit(Runkit $runkit)
     {
         $this->_runkit = $runkit;
         return $this;
@@ -466,14 +472,14 @@ abstract class RunnerAbstract
     {
         if (is_null($this->_runkit)) {
             if(!in_array('runkit', get_loaded_extensions())) {
-                throw new \Mutagenesis\FUTException(
+                throw new FUTException(
                     'Runkit extension is not loaded. Unfortunately, runkit'
                     . ' is essential for Mutagenesis. Please see the manual or'
                     . ' README which explains how to install an updated runkit'
                     . ' extension suitable for Mutagenesis and PHP 5.3.'
                 );
             }
-            $this->_runkit = new \Mutagenesis\Utility\Runkit;
+            $this->_runkit = new Runkit();
         }
         return $this->_runkit;
     }
@@ -544,7 +550,7 @@ abstract class RunnerAbstract
      *
      * @param \Mutagenesis\Generator
      */
-    public function setGenerator(\Mutagenesis\Generator $generator)
+    public function setGenerator(Generator $generator)
     {
         $this->_generator = $generator;
         $this->_generator->setSourceDirectory($this->getSourceDirectory());
@@ -559,7 +565,7 @@ abstract class RunnerAbstract
     public function getGenerator()
     {
         if (!isset($this->_generator)) {
-            $this->_generator = new \Mutagenesis\Generator($this);
+            $this->_generator = new Generator($this);
             $this->_generator->setSourceDirectory($this->getSourceDirectory());
         }
         return $this->_generator;
@@ -599,7 +605,7 @@ abstract class RunnerAbstract
             return $this;
         }
         if (!file_exists($file) || !is_readable($file)) {
-            throw new \Mutagenesis\FUTException('Invalid bootstrap file: "'.$file.'"');
+            throw new FUTException('Invalid bootstrap file: "'.$file.'"');
         }
         $this->_bootstrap = $file;
         return $this;

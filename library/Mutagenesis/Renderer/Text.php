@@ -23,7 +23,6 @@ namespace Mutagenesis\Renderer;
 
 class Text implements RendererInterface
 {
-
     /**
      * Render the opening message (i.e. app and version mostly)
      *
@@ -166,5 +165,4 @@ class Text implements RendererInterface
         $return = implode("\n", $out);
         return $return;
     }
-
 }

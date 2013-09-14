@@ -25,7 +25,6 @@ use Mutagenesis\Utility\Diff;
 
 abstract class MutationAbstract
 {
-
     /**
      * Array of original source code tokens prior to mutation
      *
@@ -157,5 +156,4 @@ abstract class MutationAbstract
         }
         return $str;
     }
-
 }

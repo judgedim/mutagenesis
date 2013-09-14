@@ -19,9 +19,12 @@
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
-class Mutagenesis_ConsoleTest extends PHPUnit_Framework_TestCase
-{
+namespace MutagenesisTest;
 
+use Mutagenesis\Console;
+
+class ConsoleTest extends \PHPUnit_Framework_TestCase
+{
     public function setUp()
     {
         $this->root = __DIR__ . '/_files/root/base1';
@@ -29,59 +32,59 @@ class Mutagenesis_ConsoleTest extends PHPUnit_Framework_TestCase
 
     public function testConsoleSetsRunnerBaseDirectoryFromCommandLineOptions()
     {
-        $runner = $this->getMock('Mutagenesis\Runner\Base', array('execute'));
-        \Mutagenesis\Console::main(array('base'=>$this->root), $runner);
+        $runner = $this->getMock('\Mutagenesis\Runner\Base', array('execute'));
+        Console::main(array('base'=>$this->root), $runner);
         $this->assertEquals($this->root, $runner->getBaseDirectory());
     }
 
     public function testConsoleSetsRunnerSourceDirectoryFromCommandLineOptions()
     {
-        $runner = $this->getMock('Mutagenesis\Runner\Base', array('execute'));
-        \Mutagenesis\Console::main(array('src'=>$this->root . '/library'), $runner);
+        $runner = $this->getMock('\Mutagenesis\Runner\Base', array('execute'));
+        Console::main(array('src'=>$this->root . '/library'), $runner);
         $this->assertEquals($this->root . '/library', $runner->getSourceDirectory());
     }
 
     public function testConsoleSetsRunnerTestsDirectoryFromCommandLineOptions()
     {
-        $runner = $this->getMock('Mutagenesis\Runner\Base', array('execute'));
-        \Mutagenesis\Console::main(array('tests'=>$this->root . '/tests'), $runner);
+        $runner = $this->getMock('\Mutagenesis\Runner\Base', array('execute'));
+        Console::main(array('tests'=>$this->root . '/tests'), $runner);
         $this->assertEquals($this->root . '/tests', $runner->getTestDirectory());
     }
 
     public function testConsoleSetsRunnerAdapterNameFromCommandLineOptions()
     {
-        $runner = $this->getMock('Mutagenesis\Runner\Base', array('execute'));
-        \Mutagenesis\Console::main(array('adapter'=>'foobar'), $runner);
+        $runner = $this->getMock('\Mutagenesis\Runner\Base', array('execute'));
+        Console::main(array('adapter'=>'foobar'), $runner);
         $this->assertEquals('foobar', $runner->getAdapterName());
     }
 
     public function testConsoleSetsRunnerAdapterOptionStringFromCommandLineOptions()
     {
-        $runner = $this->getMock('Mutagenesis\Runner\Base', array('execute'));
-        \Mutagenesis\Console::main(array('options'=>'foobar'), $runner);
+        $runner = $this->getMock('\Mutagenesis\Runner\Base', array('execute'));
+        Console::main(array('options'=>'foobar'), $runner);
         $this->assertEquals(array('foobar'), $runner->getAdapterOptions());
     }
 
     public function testConsoleSetsRunnerAdapterToPhpunitByDefault()
     {
-        $runner = $this->getMock('Mutagenesis\Runner\Base', array('execute'));
-        \Mutagenesis\Console::main(array(), $runner);
+        $runner = $this->getMock('\Mutagenesis\Runner\Base', array('execute'));
+        Console::main(array(), $runner);
         $this->assertEquals('phpunit', $runner->getAdapterName());
     }
 
     public function testConsoleSetsRunnerAdapterOptionsToEmptyStringByDefault()
     {
-        $runner = $this->getMock('Mutagenesis\Runner\Base', array('execute'));
-        \Mutagenesis\Console::main(array(), $runner);
+        $runner = $this->getMock('\Mutagenesis\Runner\Base', array('execute'));
+        Console::main(array(), $runner);
         $this->assertEquals(array(), $runner->getAdapterOptions());
     }
 
     public function testConsoleExecutesRunnerAndEchosOutput()
     {
-        $runner = $this->getMock('Mutagenesis\Runner\Base', array('execute'));
+        $runner = $this->getMock('\Mutagenesis\Runner\Base', array('execute'));
         $runner->expects($this->once())->method('execute')->will($this->returnValue('mutation results'));
         ob_start();
-        \Mutagenesis\Console::main(null, $runner);
+        Console::main(null, $runner);
         $this->assertEquals(ob_get_clean(), 'mutation results');
     }
 

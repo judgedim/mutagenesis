@@ -19,12 +19,15 @@
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
-class Mutagenesis_Mutation_OperatorAdditionTest extends PHPUnit_Framework_TestCase
-{
+namespace MutagenesisTest;
 
+use Mutagenesis\Mutation\OperatorAddition;
+
+class OperatorAdditionTest extends \PHPUnit_Framework_TestCase
+{
     public function testReturnsTokenEquivalentToSubtractionOperator()
     {
-        $mutation = new \Mutagenesis\Mutation\OperatorAddition;
+        $mutation = new OperatorAddition();
         $this->assertEquals(
             array(
                 10 => '-'
@@ -32,5 +35,4 @@ class Mutagenesis_Mutation_OperatorAdditionTest extends PHPUnit_Framework_TestCa
             $mutation->getMutation(array(), 10)
         );
     }
-
 }

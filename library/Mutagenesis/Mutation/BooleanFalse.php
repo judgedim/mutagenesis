@@ -23,7 +23,6 @@ namespace Mutagenesis\Mutation;
 
 class BooleanFalse extends MutationAbstract
 {
-
     /**
      * Replace boolean FALSE with TRUE
      *
@@ -37,5 +36,4 @@ class BooleanFalse extends MutationAbstract
         $tokens[$index][1] = 'true';
         return $tokens;
     }
-
 }

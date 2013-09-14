@@ -21,9 +21,11 @@
 
 namespace Mutagenesis;
 
+use Mutagenesis\Mutable;
+use Mutagenesis\FUTException;
+
 class Generator
 {
-
     /**
      * Collated files against which mutations can be generated
      *
@@ -52,6 +54,7 @@ class Generator
      * mutations and store the instructions for applying and reversing them as
      * a set of mutables (instances of \Mutagenesis\Mutation).
      *
+     * @param $mutableObject
      * @return void
      */
     public function generate($mutableObject = null)
@@ -59,7 +62,7 @@ class Generator
         $files = $this->getFiles();
         foreach ($files as $file) {
             if (is_null($mutableObject)) {
-                $mutable = new \Mutagenesis\Mutable($file);
+                $mutable = new Mutable($file);
             } else {
                 $mutable = new $mutableObject;
                 $mutable->setFilename($file);
@@ -82,13 +85,16 @@ class Generator
      * Set the source directory of the source code to be mutated
      *
      * @param string $sourceDirectory
+     * @return $this
+     * @throws \Mutagenesis\FUTException
      */
     public function setSourceDirectory($sourceDirectory)
     {
         if (!is_dir($sourceDirectory) || !is_readable($sourceDirectory)) {
-            throw new \Mutagenesis\FUTException('Invalid source directory: "'.$sourceDirectory.'"');
+            throw new FUTException('Invalid source directory: "'.$sourceDirectory.'"');
         }
         $this->_sourceDirectory = $sourceDirectory;
+        return $this;
     }
 
     /**
@@ -105,6 +111,7 @@ class Generator
      * Return collated files against which mutations can be generated.
      *
      * @return array
+     * @throws \Exception
      */
     public function getFiles()
     {
@@ -121,6 +128,7 @@ class Generator
      * Collate all files capable of being mutated. For now, this only
      * considers files ending in the PHP extension.
      *
+     * @param string $target
      * @return void
      */
     protected function _collateFiles($target)
@@ -141,5 +149,4 @@ class Generator
         }
         $d->close();
     }
-    
 }

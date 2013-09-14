@@ -23,7 +23,6 @@ namespace Mutagenesis\Renderer;
 
 interface RendererInterface
 {
-
     /**
      * Render the opening message (i.e. app and version mostly)
      *
@@ -63,5 +62,4 @@ interface RendererInterface
      * @return string
      */
     public function renderReport($total, $killed, $escaped, array $mutationDiffs, array $mutantsCaptured, $output = '');
-
 }

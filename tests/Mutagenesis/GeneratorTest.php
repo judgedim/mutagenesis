@@ -19,9 +19,12 @@
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
-class Mutagenesis_GeneratorTest extends PHPUnit_Framework_TestCase
-{
+namespace MutagenesisTest;
 
+use Mutagenesis\Generator;
+
+class GeneratorTest extends \PHPUnit_Framework_TestCase
+{
     public function setUp()
     {
         $this->root = __DIR__ . '/_files/root/base1';
@@ -30,7 +33,7 @@ class Mutagenesis_GeneratorTest extends PHPUnit_Framework_TestCase
 
     public function testShouldStoreSourceDirectoryValue()
     {
-        $generator = new \Mutagenesis\Generator;
+        $generator = new Generator();
         $generator->setSourceDirectory($this->root . '/library');
         $this->assertEquals($this->root . '/library', $generator->getSourceDirectory());
     }
@@ -40,13 +43,13 @@ class Mutagenesis_GeneratorTest extends PHPUnit_Framework_TestCase
      */
     public function testShouldThrowExceptionOnNonexistingDirectory()
     {
-        $generator = new \Mutagenesis\Generator;
+        $generator = new Generator();
         $generator->setSourceDirectory($this->badRoot);
     }
 
     public function testShouldCollateAllFilesValidForMutationTesting()
     {
-        $generator = new \Mutagenesis\Generator;
+        $generator = new Generator();
         $generator->setSourceDirectory($this->root);
         $this->assertEquals(array(
             $this->root . '/library/bool2.php',
@@ -56,19 +59,19 @@ class Mutagenesis_GeneratorTest extends PHPUnit_Framework_TestCase
 
     public function testShouldGenerateMutableFileObjects()
     {
-        $generator = new \Mutagenesis\Generator;
+        $generator = new Generator();
         $generator->setSourceDirectory($this->root);
-        $mutable = $this->getMock('Mutable', array('generate', 'setFilename'));
+        $mutable = $this->getMock('\Mutagenesis\Mutable', array('generate', 'setFilename'));
         $generator->generate($mutable);
         $mutables = $generator->getMutables();
-        $this->assertTrue($mutables[0] instanceof Mutable);
+        $this->assertInstanceOf('\Mutagenesis\Mutable', $mutables[0]);
     }
 
     public function testShouldGenerateAMutableFileObjectPerDetectedFile()
     {
-        $generator = new \Mutagenesis\Generator;
+        $generator = new Generator();
         $generator->setSourceDirectory($this->root);
-        $mutable = $this->getMock('Mutable', array('generate', 'setFilename'));
+        $mutable = $this->getMock('\Mutagenesis\Mutable', array('generate', 'setFilename'));
         $generator->generate($mutable);
         $this->assertEquals(2, count($generator->getMutables()));
     }

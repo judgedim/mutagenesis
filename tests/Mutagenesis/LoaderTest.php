@@ -19,9 +19,12 @@
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
-class Mutagenesis_LoaderTest extends PHPUnit_Framework_TestCase
-{
+namespace MutagenesisTest;
 
+use Mutagenesis\Loader;
+
+class LoaderTest extends \PHPUnit_Framework_TestCase
+{
     public function setUp()
     {
         spl_autoload_unregister('\Mutagenesis\Loader::loadClass');
@@ -29,8 +32,7 @@ class Mutagenesis_LoaderTest extends PHPUnit_Framework_TestCase
 
     public function testCallingRegisterRegistersSelfAsSplAutoloaderFunction()
     {
-        require_once 'Mutagenesis/Loader.php';
-        $loader = new \Mutagenesis\Loader;
+        $loader = new Loader();
         $loader->register();
         $expected = array($loader, 'loadClass');
         $this->assertTrue(in_array($expected, spl_autoload_functions()));
@@ -38,8 +40,7 @@ class Mutagenesis_LoaderTest extends PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        $loader = new \Mutagenesis\Loader;
+        $loader = new Loader();
         $loader->register();
     }
-
 }

@@ -23,7 +23,6 @@ namespace Mutagenesis\Mutation;
 
 class OperatorSubtraction extends MutationAbstract
 {
-
     /**
      * Replace minus sign (-) with plus sign (+)
      *
@@ -36,5 +35,4 @@ class OperatorSubtraction extends MutationAbstract
         $tokens[$index] = '+';
         return $tokens;
     }
-
 }
