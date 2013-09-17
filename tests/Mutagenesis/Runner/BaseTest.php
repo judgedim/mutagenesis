@@ -40,7 +40,7 @@ class RunnerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Mutagenesis\FUTException
+     * @expectedException \Mutagenesis\Runner\Exception\RuntimeException
      */
     public function testShouldThrowExceptionOnNonexistingDirectoryWhenSettingSourceDirectory()
     {
@@ -56,7 +56,7 @@ class RunnerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Mutagenesis\FUTException
+     * @expectedException \Mutagenesis\Runner\Exception\RuntimeException
      */
     public function testShouldThrowExceptionOnNonexistingDirectoryWhenSettingTestDirectory()
     {
@@ -162,7 +162,7 @@ class RunnerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Mutagenesis\FUTException
+     * @expectedException \Mutagenesis\Runner\Exception\ConfigurationException
      */
     public function testShouldThrowExceptionIfAdapterNameGivenIsNotSupported()
     {

@@ -39,7 +39,7 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Mutagenesis\FUTException
+     * @expectedException \Mutagenesis\Exception\AccessException
      */
     public function testShouldThrowExceptionOnNonexistingDirectory()
     {

@@ -285,6 +285,10 @@ class Mutable
             }
             // get method name
             if (is_array($token) && $token[0] == T_FUNCTION) {
+                //Anonymous function
+                if (!isset($tokens[$index+2][1])) {
+                    continue;
+                }
                 $methodName = $tokens[$index+2][1];
                 $inarg = true;
                 $mutable = array(

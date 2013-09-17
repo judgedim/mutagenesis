@@ -236,6 +236,17 @@ class MutableTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function shouldNotThrowNoticeWhenParameterPassedByReferenceToAnonymousFunction()
+    {
+        $file = new Mutable($this->root . '/bool3.php');
+        $file->generate();
+        $return = $file->getMutations();
+        $this->assertEquals(0, count($return));
+    }
+
+    /**
+     * @test
+     */
     public function shouldGenerateBooleanFalseMutationWhenBoolFalseDetected()
     {
         $file = new Mutable($this->root . '/bool2.php');

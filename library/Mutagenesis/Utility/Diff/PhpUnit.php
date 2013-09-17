@@ -19,6 +19,7 @@
  * @license    http://github.com/padraic/mutagenesis/blob/master/LICENSE New BSD License
  * @author     Alexey Rusnak <alexx.rusnak@gmail.com>
  */
+
 namespace Mutagenesis\Utility\Diff;
 
 /**

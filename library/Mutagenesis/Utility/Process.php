@@ -48,7 +48,7 @@
 
 namespace Mutagenesis\Utility;
 
-use Mutagenesis\FUTException;
+use Mutagenesis\Utility\Exception\RuntimeException;
 
 class Process
 {
@@ -77,7 +77,7 @@ class Process
      * source code to be executed.
      *
      * @param string $source
-     * @throws \Mutagenesis\FUTException
+     * @throws RuntimeException
      * @return array
      */
     public static function run($source)
@@ -101,7 +101,7 @@ class Process
             );
             return $return;
         } else {
-            throw new FUTException('Unable to open a new process');
+            throw new RuntimeException('Unable to open a new process');
         }
     }
     

@@ -22,7 +22,7 @@
 namespace Mutagenesis;
 
 use Mutagenesis\Mutable;
-use Mutagenesis\FUTException;
+use Mutagenesis\Exception\AccessException;
 
 class Generator
 {
@@ -86,12 +86,12 @@ class Generator
      *
      * @param string $sourceDirectory
      * @return $this
-     * @throws \Mutagenesis\FUTException
+     * @throws AccessException
      */
     public function setSourceDirectory($sourceDirectory)
     {
         if (!is_dir($sourceDirectory) || !is_readable($sourceDirectory)) {
-            throw new FUTException('Invalid source directory: "'.$sourceDirectory.'"');
+            throw new AccessException('Invalid source directory: "'.$sourceDirectory.'"');
         }
         $this->_sourceDirectory = $sourceDirectory;
         return $this;
