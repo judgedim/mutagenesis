@@ -79,7 +79,7 @@
                             <file name="Simple.php" role="php"/>
                         </dir>
                         <file name="TesteeInterface.php" role="php"/>
-                        <file name="Mutation.php" role="php"/>
+                        <file name="ClassMethod.php" role="php"/>
                     </dir>
                     <dir name="Runner">
                         <dir name="Exception">
