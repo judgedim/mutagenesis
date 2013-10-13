@@ -27,7 +27,7 @@ class OperatorIncrementTest extends \PHPUnit_Framework_TestCase
 {
     public function testReturnsTokenEquivalentToDecrementOperator()
     {
-        $mutation = new OperatorIncrement();
+        $mutation = new OperatorIncrement(10);
         $this->assertEquals(
             array(
                 10 => array(T_DEC, '--')

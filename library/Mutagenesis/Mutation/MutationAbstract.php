@@ -26,6 +26,11 @@ use Mutagenesis\Utility\Diff;
 abstract class MutationAbstract
 {
     /**
+     * @var int
+     */
+    protected $index;
+
+    /**
      * Array of original source code tokens prior to mutation
      *
      * @var array
@@ -56,11 +61,19 @@ abstract class MutationAbstract
     /**
      * Constructor; sets name and relative path of the file being mutated
      *
-     * @param string $filename
+     * @param int $index
      */
-    public function __construct($filename = '')
+    public function __construct($index)
     {
-        $this->_filename = $filename;
+        $this->index = $index;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIndex()
+    {
+        return $this->index;
     }
 
     /**
@@ -93,13 +106,12 @@ abstract class MutationAbstract
      * a mutable element
      *
      * @param array $tokens
-     * @param int $index
      * @return string
      */
-    public function mutate($tokens, $index)
+    public function mutate($tokens)
     {
         $this->_tokensOriginal = $tokens;
-        $this->_tokensMutated = $this->getMutation($this->_tokensOriginal, $index);
+        $this->_tokensMutated = $this->getMutation($this->_tokensOriginal, $this->getIndex());
         return $this->_reconstructFromTokens($this->_tokensMutated);
     }
 
@@ -112,6 +124,16 @@ abstract class MutationAbstract
     public function getFilename()
     {
         return $this->_filename;
+    }
+
+    /**
+     * @param string $fileName
+     * @return $this
+     */
+    public function setFileName($fileName)
+    {
+        $this->_filename = $fileName;
+        return $this;
     }
 
     /**

@@ -42,7 +42,7 @@ class Runkit
     {
         require_once $mutation['mutation']->getFilename();
         $newBlock = $mutation['mutation']
-            ->mutate($mutation['tokens'], $mutation['index']);
+            ->mutate($mutation['tokens']);
         $this->_methodPreserveCode = md5($mutation['method']);
         if (runkit_method_rename(
             $mutation['class'],

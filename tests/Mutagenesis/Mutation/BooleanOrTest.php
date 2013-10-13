@@ -27,7 +27,7 @@ class BooleanOrTest extends \PHPUnit_Framework_TestCase
 {
     public function testReturnsTokenEquivalentToBooleanAnd()
     {
-        $mutation = new BooleanOr();
+        $mutation = new BooleanOr(10);
         $this->assertEquals(
             array(
                 10 => array(T_BOOLEAN_AND, '&&')

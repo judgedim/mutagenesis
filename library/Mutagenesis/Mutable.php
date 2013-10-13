@@ -163,24 +163,31 @@ class Mutable
      * Based on the internal array of mutable methods, generate another
      * internal array of supported mutations accessible using getMutations().
      *
-     * @param array $mutables
+     * @param array $testees
      * @return void
      */
-    protected function _parseTokensToMutations(array $mutables)
+    protected function _parseTokensToMutations(array $testees)
     {
-        foreach ($mutables as $method) {
-            $method = $method->toArray();
-            if (!isset($method['tokens']) || empty($method['tokens'])) {
+        /**
+         * @var \Mutagenesis\Testee\TesteeInterface $testee
+         */
+        foreach ($testees as $testee) {
+            if (!$testee->hasTokens()) {
                 continue;
             }
-            foreach ($method['tokens'] as $index=>$token) {
+            foreach ($testee->getTokens() as $index => $token) {
                 if (is_string($token)) {
-                    $mutation = $this->_parseStringToken($token);
+                    $mutationName = $this->_parseStringToken($token);
                 } else {
-                    $mutation = $this->_parseToken($token);
+                    $mutationName = $this->_parseToken($token);
                 }
-                if (!is_null($mutation)) {
-                    $this->mutations[] = $method + array(
+                if ($mutationName) {
+                    /**
+                     * @var \Mutagenesis\Mutation\MutationAbstract $mutation
+                     */
+                    $mutation = new $mutationName($index);
+                    $mutation->setFileName($testee->getFileName());
+                    $this->mutations[] = $testee->toArray() + array(
                         'index' => $index,
                         'mutation' => $mutation
                     );
@@ -200,20 +207,13 @@ class Mutable
      */
     protected function _parseStringToken($token)
     {
-        $type = '';
         switch ($token) {
             case '+':
-                $type = 'OperatorAddition';
-                break;
+                return '\Mutagenesis\Mutation\OperatorAddition';
             case '-':
-                $type = 'OperatorSubtraction';
-                break;
+                return '\Mutagenesis\Mutation\OperatorSubtraction';
         }
-        if (!empty($type)) {
-            $mutationClass =  'Mutagenesis\\Mutation\\' . $type;
-            $mutation = new $mutationClass($this->getFilename());
-            return $mutation;
-        }
+        return false;
     }
 
     /**
@@ -227,30 +227,19 @@ class Mutable
      */
     protected function _parseToken(array $token)
     {
-        $type = '';
         switch ($token[0]) {
             case T_INC:
-                $type = 'OperatorIncrement';
-                break;
+                return '\Mutagenesis\Mutation\OperatorIncrement';
             case T_DEC:
-                $type = 'OperatorDecrement';
-                break;
+                return '\Mutagenesis\Mutation\OperatorDecrement';
             case T_BOOLEAN_AND:
-                $type = 'BooleanAnd';
-                break;
+                return '\Mutagenesis\Mutation\BooleanAnd';
             case T_BOOLEAN_OR:
-                $type = 'BooleanOr';
-                break;
+                return '\Mutagenesis\Mutation\BooleanOr';
             case T_STRING:
-                $type = $this->_parseTString($token);
-                break;
+                return $this->_parseTString($token);
         }
-        if (!empty($type)) {
-            $mutationClass =  'Mutagenesis\\Mutation\\' . $type;
-            $mutation = new $mutationClass($this->getFilename());
-            return $mutation;
-        }
-        return null;
+        return false;
     }
 
     /**
@@ -261,12 +250,11 @@ class Mutable
      */
     public function _parseTString(array $token)
     {
-        $type = null;
         if (strtolower($token[1]) == 'true') {
-            $type = 'BooleanTrue';
+            return '\Mutagenesis\Mutation\BooleanTrue';
         } elseif (strtolower($token[1]) == 'false') {
-            $type = 'BooleanFalse';
+            return '\Mutagenesis\Mutation\BooleanFalse';
         }
-        return $type;
+        return false;
     }
 }

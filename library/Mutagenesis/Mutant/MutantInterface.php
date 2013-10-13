@@ -14,25 +14,24 @@
  *
  * @category   Mutagenesis
  * @package    Mutagenesis
- * @subpackage UnitTests
+ * @subpackage Mutant
  * @copyright  Copyright (c) 2010 Pádraic Brady (http://blog.astrumfutura.com)
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
-namespace MutagenesisTest;
+namespace Mutagenesis\Mutant;
 
-use Mutagenesis\Mutation\OperatorSubtraction;
+use Mutagenesis\Testee;
 
-class OperatorSubtractionTest extends \PHPUnit_Framework_TestCase
+interface MutantInterface
 {
-    public function testReturnsTokenEquivalentToAdditionOperator()
-    {
-        $mutation = new OperatorSubtraction(10);
-        $this->assertEquals(
-            array(
-                10 => '+'
-            ),
-            $mutation->getMutation(array(), 10)
-        );
-    }
+    /**
+     * @return array
+     */
+    public function getMutations();
+
+    /**
+     * @return Testee\TesteeInterface
+     */
+    public function getTestee();
 }

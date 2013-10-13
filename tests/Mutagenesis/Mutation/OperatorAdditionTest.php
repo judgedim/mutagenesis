@@ -27,7 +27,7 @@ class OperatorAdditionTest extends \PHPUnit_Framework_TestCase
 {
     public function testReturnsTokenEquivalentToSubtractionOperator()
     {
-        $mutation = new OperatorAddition();
+        $mutation = new OperatorAddition(10);
         $this->assertEquals(
             array(
                 10 => '-'

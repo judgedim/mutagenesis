@@ -73,6 +73,10 @@
                         <file name="RendererInterface.php" role="php"/>
                         <file name="Text.php" role="php"/>
                     </dir>
+                    <dir name="Mutant">
+                        <file name="MutantInterface.php" role="php"/>
+                        <file name="Mutant.php" role="php"/>
+                    </dir>
                     <dir name="Testee">
                         <dir name="Parser">
                             <file name="ParserInterface.php" role="php"/>
@@ -160,6 +164,8 @@
             <install name="library/Mutagenesis/Utility/Runkit.php" as="Mutagenesis/Utility/Runkit.php"/>
             <install name="library/Mutagenesis/Utility/TestTimeAnalyser.php"
                      as="Mutagenesis/Utility/TestTimeAnalyser.php"/>
+            <install name="library/Mutagenesis/Mutant/MutantInterface.php" as="Mutagenesis/Mutant/MutantInterface.php"/>
+            <install name="library/Mutagenesis/Mutant/Mutant.php" as="Mutagenesis/Mutant/Mutant.php"/>
             <install name="library/Mutagenesis/Testee/TesteeInterface.php" as="Mutagenesis/Testee/TesteeInterface.php"/>
             <install name="library/Mutagenesis/Testee/ClassMethod.php" as="Mutagenesis/Testee/ClassMethod.php"/>
             <install name="library/Mutagenesis/Testee/Parser/ParserInterface.php" as="Mutagenesis/Testee/Parser/ParserInterface.php"/>

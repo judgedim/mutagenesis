@@ -27,7 +27,7 @@ class BooleanFalseTest extends \PHPUnit_Framework_TestCase
 {
     public function testReturnsTokenEquivalentToTrue()
     {
-        $mutation = new BooleanFalse();
+        $mutation = new BooleanFalse(10);
         $this->assertEquals(
             array(
                 10 => array(

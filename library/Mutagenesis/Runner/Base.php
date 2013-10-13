@@ -105,16 +105,14 @@ class Base extends RunnerAbstract
                     $countMutantsKilled++;
                     if ($this->getDetailCaptures()) {
                         $mutation['mutation']->mutate(
-                            $mutation['tokens'],
-                            $mutation['index']
+                            $mutation['tokens']
                         );
                         $mutantsCaptured[] = array($mutation, $result['stdout']);
                     }
                 } else {
                     $countMutantsEscaped++;
                     $mutation['mutation']->mutate(
-                        $mutation['tokens'],
-                        $mutation['index']
+                        $mutation['tokens']
                     );
                     $mutantsEscaped[] = $mutation;
                 }
