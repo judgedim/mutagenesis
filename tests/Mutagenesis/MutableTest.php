@@ -102,8 +102,9 @@ class MutableTest extends \PHPUnit_Framework_TestCase
     {
         $file = new Mutable($this->root . '/math000.php');
         $file->generate();
-        $return = $file->getMutables();
-        $this->assertEquals(array('file', 'class', 'method', 'args', 'tokens'), array_keys($return[0]));
+        foreach ($file->getMutables() as $testee) {
+            $this->assertInstanceOf('\Mutagenesis\Testee\TesteeInterface', $testee);
+        }
     }
 
     /**
@@ -123,8 +124,9 @@ class MutableTest extends \PHPUnit_Framework_TestCase
     {
         $file = new Mutable($this->root . '/math1.php');
         $file->generate();
-        $return = $file->getMutations();
-        $this->assertEquals(array('file', 'class', 'method', 'args', 'tokens', 'index', 'mutation'), array_keys($return[0]));
+        foreach ($file->getMutables() as $testee) {
+            $this->assertInstanceOf('\Mutagenesis\Testee\TesteeInterface', $testee);
+        }
     }
 
     /**
@@ -134,8 +136,9 @@ class MutableTest extends \PHPUnit_Framework_TestCase
     {
         $file = new Mutable($this->root . '/math1.php');
         $file->generate();
-        $return = $file->getMutations();
-        $this->assertInstanceOf('\Mutagenesis\Mutation\MutationAbstract', $return[0]['mutation']);
+        foreach ($file->getMutables() as $testee) {
+            $this->assertInstanceOf('\Mutagenesis\Testee\TesteeInterface', $testee);
+        }
     }
 
     /**
@@ -145,8 +148,9 @@ class MutableTest extends \PHPUnit_Framework_TestCase
     {
         $file = new Mutable($this->root . '/mathx2.php');
         $file->generate();
-        $return = $file->getMutables();
-        $this->assertEquals('Math2', $return[1]['class']);
+        foreach ($file->getMutables() as $testee) {
+            $this->assertTrue(in_array($testee->getClassName(), array('Math2', 'Math1')));
+        }
     }
 
     /**

@@ -21,8 +21,16 @@
 
 namespace Mutagenesis;
 
+use Mutagenesis\Testee\Parser;
+use Mutagenesis\Testee;
+
 class Mutable
 {
+    /**
+     * @var Parser\ParserInterface
+     */
+    protected $parser;
+
     /**
      * Name and relative path of the file to be mutated
      *
@@ -55,13 +63,25 @@ class Mutable
     }
 
     /**
+     * @return Parser\ParserInterface
+     */
+    public function getParser()
+    {
+        if (!$this->parser) {
+            $this->parser = new Parser\Simple();
+        }
+        return $this->parser;
+    }
+
+    /**
      * Based on the current file, generate mutations
      *
      * @return $this
      */
     public function generate()
     {
-        $this->mutables = $this->_parseMutables();
+        $this->mutables = $this->getParser()
+                               ->parseFile($this->getFilename());
         $this->_parseTokensToMutations($this->mutables);
         return $this;
     }
@@ -149,14 +169,15 @@ class Mutable
     protected function _parseTokensToMutations(array $mutables)
     {
         foreach ($mutables as $method) {
+            $method = $method->toArray();
             if (!isset($method['tokens']) || empty($method['tokens'])) {
                 continue;
             }
             foreach ($method['tokens'] as $index=>$token) {
                 if (is_string($token)) {
-                    $mutation = $this->_parseStringToken($token, $index);
+                    $mutation = $this->_parseStringToken($token);
                 } else {
-                    $mutation = $this->_parseToken($token, $index);
+                    $mutation = $this->_parseToken($token);
                 }
                 if (!is_null($mutation)) {
                     $this->mutations[] = $method + array(
@@ -175,10 +196,9 @@ class Mutable
      * source code being tested.
      *
      * @param array $token The token to check for viable mutations
-     * @param integer $index The index of the token in the method's body
      * @return mixed Return null if no mutation, or a mutation object
      */
-    protected function _parseStringToken($token, $index)
+    protected function _parseStringToken($token)
     {
         $type = '';
         switch ($token) {
@@ -203,10 +223,9 @@ class Mutable
      * source code being tested.
      *
      * @param array $token The token to check for viable mutations
-     * @param integer $index The index of the token in the method's body
      * @return mixed Return null if no mutation, or a mutation object
      */
-    protected function _parseToken(array $token, $index)
+    protected function _parseToken(array $token)
     {
         $type = '';
         switch ($token[0]) {
@@ -249,117 +268,5 @@ class Mutable
             $type = 'BooleanFalse';
         }
         return $type;
-    }
-
-    /**
-     * Parse the given file into an array of method metainformation including
-     * class name, method name, file name, method arguments, and method body
-     * tokens.
-     *
-     * @return array
-     */
-    protected function _parseMutables()
-    {
-        $tokens = token_get_all(
-            file_get_contents($this->getFilename())
-        );
-        $inblock = false;
-        $inarg = false;
-        $curlycount = 0;
-        $roundcount = 0;
-        $blockTokens = array();
-        $argTokens = array();
-        $methods = array();
-        $mutable = array();
-        $staticClassCapture = true;
-        foreach ($tokens as $index=>$token) {
-            if(is_array($token) && $token[0] == T_STATIC && $staticClassCapture === true) {
-                $staticClassCapture = false;
-                continue;
-            }
-            // get class name
-            if (is_array($token) && ($token[0] == T_CLASS || $token[0] == T_INTERFACE)) {
-                $className = $tokens[$index+2][1];
-                $staticClassCapture = false;
-                continue;
-            }
-            // get method name
-            if (is_array($token) && $token[0] == T_FUNCTION) {
-                //Anonymous function
-                if (!isset($tokens[$index+2][1])) {
-                    continue;
-                }
-                $methodName = $tokens[$index+2][1];
-                $inarg = true;
-                $mutable = array(
-                    'file' => $this->getFilename(),
-                    'class' => $className,
-                    'method' => $methodName
-                );
-                continue;
-            }
-            // Get the method's parameter string
-            if ($inarg) {
-                if ($token == '(') {
-                    $roundcount += 1;
-                } elseif ($token == ')') {
-                    $roundcount -= 1;
-                }
-                if ($roundcount == 1 && $token == '(') {
-                    continue;
-                } elseif ($roundcount >= 1) {
-                    $argTokens[] = $token;
-                } elseif ($roundcount == 0) {
-                    $mutable['args'] = $this->_reconstructFromTokens($argTokens);
-                    $argTokens = array();
-                    $inarg = false;
-                    $inblock = true;
-                }
-                continue;
-            }
-            // Get the method's block code
-            if ($inblock) {
-                if ($token == '{') {
-                    $curlycount += 1;
-                } elseif ($token == '}') {
-                    $curlycount -= 1;
-                }
-                if ($curlycount == 1 && $token == '{') {
-                    continue;
-                } elseif ($curlycount >= 1) {
-                    if (is_array($token) && $token[0] == 370) {
-                        continue;
-                    }
-                    $blockTokens[] = $token;
-                } elseif ($curlycount == 0 && count($blockTokens) > 0) {
-                    $mutable['tokens'] = $blockTokens;
-                    $methods[] = $mutable;
-                    $mutable = array();
-                    $blockTokens = array();
-                    $inblock = false;
-                    $staticClassCapture = true;
-                }
-            }
-        }
-        return $methods;
-    }
-
-    /**
-     * Reconstruct a string of source code from its constituent tokens
-     *
-     * @param array $tokens
-     * @return string
-     */
-    protected function _reconstructFromTokens(array $tokens)
-    {
-        $str = '';
-        foreach ($tokens as $token) {
-            if (is_string($token)) {
-                $str .= $token;
-            } else {
-                $str .= $token[1];
-            }
-        }
-        return $str;
     }
 }
