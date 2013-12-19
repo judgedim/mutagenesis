@@ -155,9 +155,8 @@
             <install name="library/Mutagenesis/Runner/Exception/ConfigurationException.php" as="Mutagenesis/Runner/Exception/ConfigurationException.php"/>
             <install name="library/Mutagenesis/Runner/Mutation.php" as="Mutagenesis/Runner/Mutation.php"/>
             <install name="library/Mutagenesis/Runner/RunnerAbstract.php" as="Mutagenesis/Runner/RunnerAbstract.php"/>
-            <install name="library/Mutagenesis/Utility/Diff/ProviderInterface.php"
-                     as="Mutagenesis/Utility/ProviderInterface.php"/>
-            <install name="library/Mutagenesis/Utility/Diff/PhpUnit.php" as="Mutagenesis/Utility/PhpUnit.php"/>
+            <install name="library/Mutagenesis/Utility/Diff/ProviderInterface.php" as="Mutagenesis/Utility/Diff/ProviderInterface.php"/>
+            <install name="library/Mutagenesis/Utility/Diff/PhpUnit.php" as="Mutagenesis/Utility/Diff/PhpUnit.php"/>
             <install name="library/Mutagenesis/Utility/Exception/RuntimeException.php" as="Mutagenesis/Utility/Exception/RuntimeException.php"/>
             <install name="library/Mutagenesis/Utility/Job.php" as="Mutagenesis/Utility/Job.php"/>
             <install name="library/Mutagenesis/Utility/Process.php" as="Mutagenesis/Utility/Process.php"/>
