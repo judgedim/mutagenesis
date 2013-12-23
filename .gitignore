@@ -1,5 +1,7 @@
 *~
 pearfarm.spec
 package.xml
-*.sublime-project
 .idea
+*.sublime-project
+composer.lock
+vendor

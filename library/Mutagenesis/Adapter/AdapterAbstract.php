@@ -28,6 +28,8 @@ abstract class AdapterAbstract
 
     const TIMED_OUT = 'timed out';
 
+    const PROCESS_FAILURE = 'process failure';
+
     /**
      * Output from the test library in use
      *

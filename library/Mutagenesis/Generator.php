@@ -41,6 +41,13 @@ class Generator
     protected $_sourceDirectory = '';
 
     /**
+     * Array of globs to exclude from the source to be mutated
+     *
+     * @var array
+     */
+    protected $_sourceExcludes = array();
+
+    /**
      * The collection of possible mutations stored as sets of mutation
      * instructions (allowing us to apply and reverse mutations on the fly)
      *
@@ -108,6 +115,28 @@ class Generator
     }
 
     /**
+     * Set the array of globs to exclude from the source
+     *
+     * @param array $excludes
+     *
+     * @return Generator
+     */
+    public function setSourceExcludes(array $excludes)
+    {
+        $this->_sourceExcludes = $excludes;
+        return $this;
+    }
+
+    /**
+     * Get the array of globs to be excluded from the source directory
+     *
+     * @return array
+     */
+    public function getSourceExcludes()
+    {
+        return $this->_sourceExcludes;
+    }
+    /**
      * Return collated files against which mutations can be generated.
      *
      * @return array
@@ -120,6 +149,15 @@ class Generator
                 throw new \Exception('Source directory has not been set');
             }
             $this->_collateFiles($this->getSourceDirectory());
+
+            $excludes = $this->getSourceExcludes();
+            if (!empty($excludes)) {
+                foreach ($excludes as $glob) {
+                    $this->_files = array_filter($this->_files, function($file) use ($glob) {
+                        return !fnmatch($glob, $file);
+                    });
+                }
+            }
         }
         return $this->_files;
     }

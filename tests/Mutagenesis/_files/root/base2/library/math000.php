@@ -4,6 +4,6 @@ class Math
 {
     public function add() 
     {
-        return 'add';
+        return "add $dave";
     }
 }

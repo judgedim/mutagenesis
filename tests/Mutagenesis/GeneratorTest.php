@@ -59,6 +59,16 @@ class GeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(sort($expectedFiles), sort($result));
     }
 
+    public function testShouldCollateAllFilesValidForMutationTestingExcludingExcludes()
+    {
+        $generator = new \Mutagenesis\Generator;
+        $generator->setSourceDirectory($this->root);
+        $generator->setSourceExcludes(array("*bool1*"));
+        $this->assertEquals(array(
+            1 => $this->root . '/library/bool2.php',
+        ),$generator->getFiles());
+    }
+
     public function testShouldGenerateMutableFileObjects()
     {
         $generator = new Generator();

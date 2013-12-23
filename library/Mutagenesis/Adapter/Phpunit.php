@@ -42,7 +42,7 @@ class Phpunit extends AdapterAbstract
      * Second element is an array containing the key "stdout" which stores the
      * output from the last test run.
      *
-     * @param \Mutagenesis\Runner\RunnerAbstract $baseRunner
+     * @param BaseRunner $runner
      * @param bool $useStdout
      * @param bool $firstRun
      * @param array $mutation
@@ -54,8 +54,10 @@ class Phpunit extends AdapterAbstract
     {
         $options = $runner->getOptions();
         $job = new Job();
+        $outputKey = 'stdout';
         if(!$useStdout) {
             array_unshift($options['clioptions'], '--stderr');
+            $outputKey = 'stderr';
         }
         if (!in_array('--stop-on-failure', $options['clioptions'])) {
             array_unshift($options['clioptions'], '--stop-on-failure');
@@ -81,8 +83,9 @@ class Phpunit extends AdapterAbstract
                         $runner->getBootstrap()
                     )
                 );
-                if (!$this->processOutput($output['stdout'])) {
-                    return array(false, $output);
+                $res = $this->processOutput($output[$outputKey]);
+                if (false === $res) {
+                    return array($res, $output);
                 }
             }
         } else {
@@ -99,11 +102,12 @@ class Phpunit extends AdapterAbstract
                     $runner->getBootstrap()
                 )
             );
-            if (!$this->processOutput($output['stdout'])) {
+            $res = $this->processOutput($output[$outputKey]);
+            if (!$res) {
                 return array(false, $output);
             }
         }
-        return array(true, $output);
+        return array($res, $output);
     }
 
     /**
@@ -129,7 +133,11 @@ class Phpunit extends AdapterAbstract
      * configured to write to stderrm(stdin is used in proc_open call)
      *
      * @param array $arguments Mutagenesis arguments to pass to PHPUnit
+     * @param string|null $mutation
+     * @param string|null $bootstrap
      * @return void
+     *
+     * @throws \Exception
      */
     public static function main($arguments, $mutation = null, $bootstrap = null)
     {
@@ -164,7 +172,10 @@ class Phpunit extends AdapterAbstract
         if (isset($arguments['tests'])) {
             chdir($arguments['tests']);
         }
-        $command = new \PHPUnit_TextUI_Command;
+        $command = new \PHPUnit_TextUI_Command; 
+        if (empty($arguments['clioptions'])) {
+            $arguments['clioptions'] = array();
+        }
         $command->run($arguments['clioptions'], false);
         chdir($originalWorkingDirectory);
     }
@@ -182,8 +193,17 @@ class Phpunit extends AdapterAbstract
         if (substr($output, 0, 21) == 'Your tests timed out.') { //TODO: Multiple instances
             return self::TIMED_OUT;
         }
+
+        if (substr($output, 0, 7) != "PHPUnit") {
+            return self::PROCESS_FAILURE;
+        }
+
         $lines = explode("\n", $output);
+
         $useful = array_slice($lines, 2);
+        if (!empty($useful) && 0 === strpos($useful[0], "Configuration read from")) {
+            $useful = array_slice($useful, 2);
+        }
         foreach ($useful as $line) {
             if ($line == "\n") {
                 break;

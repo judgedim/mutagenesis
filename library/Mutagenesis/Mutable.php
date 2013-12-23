@@ -232,10 +232,17 @@ class Mutable
                 return '\Mutagenesis\Mutation\OperatorIncrement';
             case T_DEC:
                 return '\Mutagenesis\Mutation\OperatorDecrement';
+            case T_IS_NOT_EQUAL:
+                return '\Mutagenesis\Mutation\OperatorComparisonNotEqual';
             case T_BOOLEAN_AND:
                 return '\Mutagenesis\Mutation\BooleanAnd';
             case T_BOOLEAN_OR:
                 return '\Mutagenesis\Mutation\BooleanOr';
+            case T_CONSTANT_ENCAPSED_STRING:
+                return '\Mutagenesis\Mutation\ScalarString';
+            case T_IF:
+            case T_ELSEIF:
+                return '\Mutagenesis\Mutation\LogicalIf';
             case T_STRING:
                 return $this->_parseTString($token);
         }

@@ -40,9 +40,20 @@ class Simple implements ParserInterface
         $blockTokens = array();
         $argTokens = array();
         $methods = array();
+        $static = false;
         $staticClassCapture = true;
+        $namespace = "";
         foreach ($tokens as $index=>$token) {
+            if(is_array($token) && $token[0] == T_NAMESPACE) {
+                $namespace = "\\" . $tokens[$index+2][1];
+                $i = 3;
+                while(is_array($tokens[$index+$i]) && $token[0] = T_NS_SEPARATOR) {
+                    $namespace.= "\\" . $tokens[$index+$i+1][1];
+                    $i+=2;
+                }
+            }
             if(is_array($token) && $token[0] == T_STATIC && $staticClassCapture === true) {
+                $static = true;
                 $staticClassCapture = false;
                 continue;
             }
@@ -53,13 +64,15 @@ class Simple implements ParserInterface
                 continue;
             }
             // get method name
-            if (is_array($token) && $token[0] == T_FUNCTION) {
-                //Anonymous function
-                if (!isset($tokens[$index+2][1])) {
+            if (is_array($token) && $token[0] == T_FUNCTION && !$inblock) {
+
+                if (!is_array($tokens[$index+2]) || $tokens[$index+2][0] != T_STRING || $tokens[$index+1] == "(") {
+                    // probably a closure, skip for now
                     continue;
                 }
                 $methodName = $tokens[$index+2][1];
                 $inarg = true;
+                $roundcount = false;
                 $mutable = new ClassMethodTestee();
                 $mutable->setFileName($path)
                         ->setClassName($className)
@@ -77,7 +90,7 @@ class Simple implements ParserInterface
                     continue;
                 } elseif ($roundcount >= 1) {
                     $argTokens[] = $token;
-                } elseif ($roundcount == 0) {
+                } elseif ($roundcount === 0) {
                     $mutable->setArguments($this->_reconstructFromTokens($argTokens));
                     $argTokens = array();
                     $inarg = false;
@@ -87,7 +100,7 @@ class Simple implements ParserInterface
             }
             // Get the method's block code
             if ($inblock) {
-                if ($token == '{') {
+                if ($token == '{' || (is_array($token) && $token[0] == T_CURLY_OPEN)) {
                     $curlycount += 1;
                 } elseif ($token == '}') {
                     $curlycount -= 1;

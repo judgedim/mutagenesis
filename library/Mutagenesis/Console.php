@@ -54,7 +54,8 @@ class Console
                     'options::',
                     'timeout::',
                     'detail-captures::',
-                    'constraint::'
+                    'constraint::',
+                    'src-exclude::'
                 )
             );
         } else {
@@ -67,6 +68,7 @@ class Console
 
         self::setBaseDirectory($runner);
         self::setSourceDirectory($runner);
+        self::setSourceExcludes($runner);
         self::setTestDirectory($runner);
         self::setAdapterName($runner);
         self::setBootstrap($runner);
@@ -104,6 +106,18 @@ class Console
             $runner->setSourceDirectory(self::$_options['src']);
         } else {
             $runner->setSourceDirectory(getcwd());
+        }
+    }
+
+    /**
+     * Set any source exclusions on the runner
+     *
+     * @param \Mutagenesis\Runner\RunnerAbstract $runner
+     */
+    protected static function setSourceExcludes(\Mutagenesis\Runner\RunnerAbstract $runner)
+    {
+        if (!empty(self::$_options['src-exclude'])) {
+            $runner->setSourceExcludes((array) self::$_options['src-exclude']);
         }
     }
 

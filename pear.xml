@@ -68,6 +68,9 @@
                         <file name="OperatorDecrement.php" role="php"/>
                         <file name="OperatorIncrement.php" role="php"/>
                         <file name="OperatorSubtraction.php" role="php"/>
+                        <file name="ScalarString.php" role="php"/>
+                        <file name="LogicalIf.php" role="php"/>
+                        <file name="OperatorComparisonNotEqual.php" role="php"/>
                     </dir>
                     <dir name="Renderer">
                         <file name="RendererInterface.php" role="php"/>
@@ -137,6 +140,9 @@
             <install name="library/Mutagenesis/Mutation/BooleanFalse.php" as="Mutagenesis/Mutation/BooleanFalse.php"/>
             <install name="library/Mutagenesis/Mutation/BooleanOr.php" as="Mutagenesis/Mutation/BooleanOr.php"/>
             <install name="library/Mutagenesis/Mutation/BooleanTrue.php" as="Mutagenesis/Mutation/BooleanTrue.php"/>
+            <install name="library/Mutagenesis/Mutation/ScalarString.php" as="Mutagenesis/Mutation/ScalarString.php"/>
+            <install name="library/Mutagenesis/Mutation/LogicalIf.php" as="Mutagenesis/Mutation/LogicalIf.php"/>
+            <install name="library/Mutagenesis/Mutation/OperatorComparisonNotEqual.php" as="Mutagenesis/Mutation/OperatorComparisonNotEqual.php"/>
             <install name="library/Mutagenesis/Mutation/MutationAbstract.php"
                      as="Mutagenesis/Mutation/MutationAbstract.php"/>
             <install name="library/Mutagenesis/Mutation/OperatorAddition.php"

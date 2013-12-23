@@ -92,6 +92,15 @@ class Base extends RunnerAbstract
             $mutations = $mutable->generate()->getMutations();
             foreach ($mutations as $mutation) {
 
+                /**
+                 * Check the mutation actually mutates...
+                 */
+                $mutation['mutation']->mutate($mutation['tokens'], $mutation['index']);
+
+                if ($mutation['mutation']->getDiff() == "") {
+                    continue;
+                }
+
                 $result = $this->getAdapter()->runTests(
                     $this,
                     true,
@@ -107,9 +116,9 @@ class Base extends RunnerAbstract
                         $mutation['mutation']->mutate(
                             $mutation['tokens']
                         );
-                        $mutantsCaptured[] = array($mutation, $result['stdout']);
+                        $mutantsCaptured[] = array($mutation, $result[1]['stderr']);
                     }
-                } else {
+                } else if ($result[0] !== 'process failure') {
                     $countMutantsEscaped++;
                     $mutation['mutation']->mutate(
                         $mutation['tokens']

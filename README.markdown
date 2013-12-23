@@ -131,6 +131,8 @@ to direct the unit test framework adapter:
 * --bootstrap: Sets a bootstrap file to include prior to running tests
 * --constraint: PHPUnit class and/or file path for test execution
 * --detail-captures: Shows mutation diffs and testing reports for captured mutants
+* --src-exclude: Optional glob string to allow exclusion of files under --src
+  (can be set multiple times)
 
 Note: The default timeout is 120 seconds. Any test suite exceeding this should
 have a relevant timeout set using --timeout or else all test runs would

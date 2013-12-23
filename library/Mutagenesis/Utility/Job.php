@@ -34,26 +34,40 @@ class Job
      */
     public function generate(array $mutation = array(), array $args = array(), $timeout = 60, $bootstrap = null)
     {
-        $serializedArgs = addcslashes(serialize($args), '$"');
-        $serializedMutation = addcslashes(serialize($mutation), '$"');
+        $serializedArgs = addslashes(serialize($args));
+        $serializedMutation = addcslashes(serialize($mutation), "'\\");
         if (is_null($bootstrap)) {
             $bootstrap = 'null';
         } else {
             $bootstrap = '"' . addslashes($bootstrap) . '"';
         }
-        $script = <<<SCRIPT
-<?php
-namespace MutagenesisEnv;
-declare(ticks = 1);
-require_once 'PHPUnit/Autoload.php';
+
+        if (file_exists(__DIR__.'/../../../vendor/autoload.php')) {
+            $autoload =  'include "'.realpath(__DIR__.'/../../../vendor/autoload.php').'";';
+        } else if (file_exists(__DIR__.'/../../../../../autoload.php')) {
+            $autoload = 'include "'.realpath(__DIR__.'/../../../../../autoload.php').'";';
+        } else { 
+            $mutagenesisPath = realpath(__DIR__ . '/../../');
+            $autoload = <<<EOS
 require_once 'Mutagenesis/Loader.php';
 \$loader = new \Mutagenesis\Loader;
 \$loader->register();
+EOS;
+        }
+
+        $script = <<<SCRIPT
+<?php
+
+namespace MutagenesisEnv;
+
+declare(ticks = 1);
+require_once 'PHPUnit/Autoload.php';
+$autoload
 class Job {
     static function main () {
         \Mutagenesis\Adapter\Phpunit::main(
             "{$serializedArgs}",
-            "{$serializedMutation}",
+            '{$serializedMutation}',
             {$bootstrap}
         );
     }
