@@ -212,6 +212,8 @@ class Mutable
                 return '\Mutagenesis\Mutation\OperatorAddition';
             case '-':
                 return '\Mutagenesis\Mutation\OperatorSubtraction';
+            case '/':
+                return '\Mutagenesis\Mutation\OperatorArithmeticDivision';
         }
         return false;
     }
@@ -240,6 +242,8 @@ class Mutable
                 return '\Mutagenesis\Mutation\BooleanOr';
             case T_CONSTANT_ENCAPSED_STRING:
                 return '\Mutagenesis\Mutation\ScalarString';
+            case T_LNUMBER:
+                return '\Mutagenesis\Mutation\ScalarInteger';
             case T_IF:
             case T_ELSEIF:
                 return '\Mutagenesis\Mutation\LogicalIf';

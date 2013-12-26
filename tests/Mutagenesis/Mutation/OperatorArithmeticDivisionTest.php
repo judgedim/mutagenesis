@@ -21,27 +21,19 @@
 
 namespace MutagenesisTest;
 
-use Mutagenesis\Mutation\ScalarString;
+use Mutagenesis\Mutation\OperatorArithmeticDivision;
 
-class ScalarStringTest extends \PHPUnit_Framework_TestCase
+class OperatorArithmeticDivisionTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function testReturnsTokenEquivalentToOperatorComparisonEqual()
+    public function testReturnsTokenEquivalentToSubtractionOperator()
     {
         $index = 10;
-        $inputString = "DAVEDAVEDAVE";
-        $mutation = new ScalarString($index);
-
-        $mutations = $mutation->getMutation(
+        $mutation = new OperatorArithmeticDivision($index);
+        $this->assertEquals(
             array(
-                $index => array(T_CONSTANT_ENCAPSED_STRING, $inputString)
+                $index => '*'
             ),
-            $index
+            $mutation->getMutation(array(), $index)
         );
-        list($code, $outputString) = $mutations[$index];
-        $this->assertEquals(T_CONSTANT_ENCAPSED_STRING, $code);
-        $this->assertNotEquals($inputString, $outputString);
-        $this->assertInternalType("string", $outputString);
     }
-
 }

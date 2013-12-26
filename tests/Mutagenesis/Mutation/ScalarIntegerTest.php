@@ -21,27 +21,27 @@
 
 namespace MutagenesisTest;
 
-use Mutagenesis\Mutation\ScalarString;
+use Mutagenesis\Mutation\ScalarInteger;
 
-class ScalarStringTest extends \PHPUnit_Framework_TestCase
+class ScalarIntegerTest extends \PHPUnit_Framework_TestCase
 {
 
     public function testReturnsTokenEquivalentToOperatorComparisonEqual()
     {
         $index = 10;
-        $inputString = "DAVEDAVEDAVE";
-        $mutation = new ScalarString($index);
+        $inputInt = 12345;
+        $mutation = new ScalarInteger($index);
 
         $mutations = $mutation->getMutation(
             array(
-                $index => array(T_CONSTANT_ENCAPSED_STRING, $inputString)
+                $index => array(T_LNUMBER, $inputInt)
             ),
             $index
         );
-        list($code, $outputString) = $mutations[$index];
-        $this->assertEquals(T_CONSTANT_ENCAPSED_STRING, $code);
-        $this->assertNotEquals($inputString, $outputString);
-        $this->assertInternalType("string", $outputString);
+        list($code, $outputInt) = $mutations[$index];
+        $this->assertEquals(T_LNUMBER, $code);
+        $this->assertNotEquals($inputInt, $outputInt);
+        $this->assertInternalType("integer", $outputInt);
     }
 
 }
