@@ -23,6 +23,10 @@ namespace Mutagenesis;
 
 use Mutagenesis\Testee\Parser;
 use Mutagenesis\Testee;
+use Mutagenesis\Mutation\Factory\MutationFactory;
+use Mutagenesis\Mutant\MutantCollection;
+use Mutagenesis\Mutant\MutantCollectionInterface;
+use Mutagenesis\Mutant\Mutant;
 
 class Mutable
 {
@@ -39,11 +43,11 @@ class Mutable
     protected $filename = null;
 
     /**
-     *  An array of generated mutations to be sequentially tested
+     *  An array of generated mutants to be sequentially tested
      *
-     * @var array
+     * @var MutantCollectionInterface
      */
-    protected $mutations = array();
+    protected $mutants;
 
     /**
      *  Array of mutable elements located in file
@@ -53,6 +57,16 @@ class Mutable
     protected $mutables = array();
 
     /**
+     * @var MutantCollection
+     */
+    protected $mutantsEscaped;
+
+    /**
+     * @var MutantCollection
+     */
+    protected $mutantsCaptured;
+
+    /**
      * Constructor; sets name and relative path of the file being mutated
      *
      * @param string $filename
@@ -60,6 +74,7 @@ class Mutable
     public function __construct($filename = null)
     {
         $this->setFilename($filename);
+        $this->mutants = new MutantCollection();
     }
 
     /**
@@ -70,6 +85,7 @@ class Mutable
         if (!$this->parser) {
             $this->parser = new Parser\Simple();
         }
+
         return $this->parser;
     }
 
@@ -81,8 +97,9 @@ class Mutable
     public function generate()
     {
         $this->mutables = $this->getParser()
-                               ->parseFile($this->getFilename());
-        $this->_parseTokensToMutations($this->mutables);
+            ->parseFile($this->getFilename());
+        $this->parseTokensToMutations($this->mutables);
+
         return $this;
     }
 
@@ -91,7 +108,8 @@ class Mutable
      */
     public function cleanup()
     {
-        $this->mutations = $this->mutables = array();
+        $this->mutables = array();
+
         return $this;
     }
 
@@ -100,11 +118,13 @@ class Mutable
      * mutations.
      *
      * @param string $filename
+     *
      * @return $this
      */
     public function setFilename($filename)
     {
         $this->filename = $filename;
+
         return $this;
     }
 
@@ -123,11 +143,11 @@ class Mutable
      * Get an array of Class & Method indexed mutations containing the mutated
      * token and that token's index in the method's block code.
      *
-     * @return array
+     * @return MutantCollectionInterface
      */
-    public function getMutations()
+    public function getMutants()
     {
-        return $this->mutations;
+        return $this->mutants;
     }
 
     /**
@@ -143,30 +163,49 @@ class Mutable
     }
 
     /**
+     * @return \SplObjectStorage
+     */
+    public function getMutantsCaptured()
+    {
+        return $this->mutants->getMutantsCaptured();
+    }
+
+    /**
+     * @return \SplObjectStorage
+     */
+    public function getMutantsEscaped()
+    {
+        return $this->mutants->getMutantsEscaped();
+    }
+
+    /**
      * Check whether the current file will contain a mutation of the given type
      *
      * @param string $type The mutation type as documented
+     *
      * @return bool
      */
     public function hasMutation($type)
     {
         $typeClass = '\\Mutagenesis\\Mutation\\' . $type;
-        foreach ($this->getMutations() as $mutation) {
-            if ($mutation['mutation'] instanceof $typeClass) {
+        foreach ($this->getMutants() as $mutant) {
+            if ($mutant->getMutation() instanceof $typeClass) {
                 return true;
             }
         }
+
         return false;
     }
 
     /**
      * Based on the internal array of mutable methods, generate another
-     * internal array of supported mutations accessible using getMutations().
+     * internal array of supported mutations accessible using getMutants().
      *
      * @param array $testees
+     *
      * @return void
      */
-    protected function _parseTokensToMutations(array $testees)
+    protected function parseTokensToMutations(array $testees)
     {
         /**
          * @var \Mutagenesis\Testee\TesteeInterface $testee
@@ -176,96 +215,17 @@ class Mutable
                 continue;
             }
             foreach ($testee->getTokens() as $index => $token) {
-                if (is_string($token)) {
-                    $mutationName = $this->_parseStringToken($token);
-                } else {
-                    $mutationName = $this->_parseToken($token);
-                }
-                if ($mutationName) {
-                    /**
-                     * @var \Mutagenesis\Mutation\MutationAbstract $mutation
-                     */
-                    $mutation = new $mutationName($index);
-                    $mutation->setFileName($testee->getFileName());
-                    $this->mutations[] = $testee->toArray() + array(
-                        'index' => $index,
-                        'mutation' => $mutation
-                    );
+                $mutation = MutationFactory::create($token, $index);
+                if ($mutation !== false) {
+                    $mutant = new Mutant($testee, $mutation);
+                    $mutant->mutate();
+
+                    if ($mutant->checkDiff()) {
+                        $this->mutants->push($mutant);
+                    }
                 }
             }
         }
     }
 
-    /**
-     * Parse a given token (in string form) to identify its type and ascertain
-     * whether it can be replaced with a mutated form. The mutated form, if
-     * any, is returned for future integration into a mutated version of the
-     * source code being tested.
-     *
-     * @param array $token The token to check for viable mutations
-     * @return mixed Return null if no mutation, or a mutation object
-     */
-    protected function _parseStringToken($token)
-    {
-        switch ($token) {
-            case '+':
-                return '\Mutagenesis\Mutation\OperatorAddition';
-            case '-':
-                return '\Mutagenesis\Mutation\OperatorSubtraction';
-            case '/':
-                return '\Mutagenesis\Mutation\OperatorArithmeticDivision';
-        }
-        return false;
-    }
-
-    /**
-     * Parse a given token (in array form) to identify its type and ascertain
-     * whether it can be replaced with a mutated form. The mutated form, if
-     * any, is returned for future integration into a mutated version of the
-     * source code being tested.
-     *
-     * @param array $token The token to check for viable mutations
-     * @return mixed Return null if no mutation, or a mutation object
-     */
-    protected function _parseToken(array $token)
-    {
-        switch ($token[0]) {
-            case T_INC:
-                return '\Mutagenesis\Mutation\OperatorIncrement';
-            case T_DEC:
-                return '\Mutagenesis\Mutation\OperatorDecrement';
-            case T_IS_NOT_EQUAL:
-                return '\Mutagenesis\Mutation\OperatorComparisonNotEqual';
-            case T_BOOLEAN_AND:
-                return '\Mutagenesis\Mutation\BooleanAnd';
-            case T_BOOLEAN_OR:
-                return '\Mutagenesis\Mutation\BooleanOr';
-            case T_CONSTANT_ENCAPSED_STRING:
-                return '\Mutagenesis\Mutation\ScalarString';
-            case T_LNUMBER:
-                return '\Mutagenesis\Mutation\ScalarInteger';
-            case T_IF:
-            case T_ELSEIF:
-                return '\Mutagenesis\Mutation\LogicalIf';
-            case T_STRING:
-                return $this->_parseTString($token);
-        }
-        return false;
-    }
-
-    /**
-     * Parse a T_STRING value to identify a possible mutation type
-     *
-     * @param array $token
-     * @return string
-     */
-    public function _parseTString(array $token)
-    {
-        if (strtolower($token[1]) == 'true') {
-            return '\Mutagenesis\Mutation\BooleanTrue';
-        } elseif (strtolower($token[1]) == 'false') {
-            return '\Mutagenesis\Mutation\BooleanFalse';
-        }
-        return false;
-    }
 }

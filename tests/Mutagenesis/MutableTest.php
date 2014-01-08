@@ -53,7 +53,8 @@ class MutableTest extends \PHPUnit_Framework_TestCase
     public function shouldNotHaveMutationsBeforeGeneration()
     {
         $file = new Mutable($this->root . '/math1.php');
-        $this->assertEquals(array(), $file->getMutations());
+        $this->assertInstanceOf('\Mutagenesis\Mutant\MutantCollectionInterface', $file->getMutants());
+        $this->assertEquals(0, $file->getMutants()->count());
     }
 
     /**
@@ -62,7 +63,8 @@ class MutableTest extends \PHPUnit_Framework_TestCase
     public function shouldNotHaveDetectedMutablesBeforeGeneration()
     {
         $file = new Mutable($this->root . '/math1.php');
-        $this->assertEquals(array(), $file->getMutables());
+        $this->assertInstanceOf('\Mutagenesis\Mutant\MutantCollectionInterface', $file->getMutants());
+        $this->assertEquals(0, $file->getMutants()->count());
     }
 
     /**
@@ -72,7 +74,8 @@ class MutableTest extends \PHPUnit_Framework_TestCase
     {
         $file = new Mutable($this->root . '/math0.php');
         $file->generate();
-        $this->assertEquals(array(), $file->getMutables());
+        $this->assertInstanceOf('\Mutagenesis\Mutant\MutantCollectionInterface', $file->getMutants());
+        $this->assertEquals(0, $file->getMutants()->count());
     }
 
     /**
@@ -82,7 +85,8 @@ class MutableTest extends \PHPUnit_Framework_TestCase
     {
         $file = new Mutable($this->root . '/math0.php');
         $file->generate();
-        $this->assertEquals(array(), $file->getMutations());
+        $this->assertInstanceOf('\Mutagenesis\Mutant\MutantCollectionInterface', $file->getMutants());
+        $this->assertEquals(0, $file->getMutants()->count());
     }
 
     /**
@@ -92,7 +96,8 @@ class MutableTest extends \PHPUnit_Framework_TestCase
     {
         $file = new Mutable($this->root . '/math00.php');
         $file->generate();
-        $this->assertEquals(array(), $file->getMutations());
+        $this->assertInstanceOf('\Mutagenesis\Mutant\MutantCollectionInterface', $file->getMutants());
+        $this->assertEquals(0, $file->getMutants()->count());
     }
 
     /**
@@ -114,7 +119,8 @@ class MutableTest extends \PHPUnit_Framework_TestCase
     {
         $file = new Mutable($this->root . '/math000.php');
         $file->generate();
-        $this->assertEquals(array(), $file->getMutations());
+        $this->assertInstanceOf('\Mutagenesis\Mutant\MutantCollectionInterface', $file->getMutants());
+        $this->assertEquals(0, $file->getMutants()->count());
     }
 
     /**
@@ -160,8 +166,11 @@ class MutableTest extends \PHPUnit_Framework_TestCase
     {
         $file = new Mutable($this->root . '/mathx2.php');
         $file->generate();
-        $return = $file->getMutations();
-        $this->assertEquals('Math2', $return[1]['class']);
+        $mutants = $file->getMutants()->all();
+        $mutants->rewind();
+        $mutants->next();
+        $mutant = $mutants->current();
+        $this->assertEquals('Math2', $mutant->getClassName());
     }
 
     /**
@@ -185,9 +194,11 @@ class MutableTest extends \PHPUnit_Framework_TestCase
     {
         $file = new Mutable($this->root . '/math1.php');
         $file->generate();
-        $return = $file->getMutations();
-        $this->assertEquals(1, count($return));
-        $this->assertInstanceOf('\Mutagenesis\Mutation\OperatorAddition', $return[0]['mutation']);
+        $mutants = $file->getMutants()->all();
+        $mutants->rewind();
+        $mutant = $mutants->current();
+        $this->assertEquals(1, count($mutants));
+        $this->assertInstanceOf('\Mutagenesis\Mutation\OperatorAddition', $mutant->getMutation());
         $this->assertTrue($file->hasMutation('OperatorAddition'));
         $this->assertFalse($file->hasMutation('OperatorSubtraction'));
     }
@@ -199,9 +210,11 @@ class MutableTest extends \PHPUnit_Framework_TestCase
     {
         $file = new Mutable($this->root . '/math2.php');
         $file->generate();
-        $return = $file->getMutations();
-        $this->assertEquals(1, count($return));
-        $this->assertInstanceOf('\Mutagenesis\Mutation\OperatorSubtraction', $return[0]['mutation']);
+        $mutants = $file->getMutants()->all();
+        $mutants->rewind();
+        $mutant = $mutants->current();
+        $this->assertEquals(1, count($mutants));
+        $this->assertInstanceOf('\Mutagenesis\Mutation\OperatorSubtraction', $mutant->getMutation());
         $this->assertTrue($file->hasMutation('OperatorSubtraction'));
         $this->assertFalse($file->hasMutation('OperatorAddition'));
     }
@@ -213,9 +226,11 @@ class MutableTest extends \PHPUnit_Framework_TestCase
     {
         $file = new Mutable($this->root . '/math3.php');
         $file->generate();
-        $return = $file->getMutations();
-        $this->assertEquals(1, count($return));
-        $this->assertInstanceOf('\Mutagenesis\Mutation\OperatorIncrement', $return[0]['mutation']);
+        $mutants = $file->getMutants()->all();
+        $mutants->rewind();
+        $mutant = $mutants->current();
+        $this->assertEquals(1, count($mutants));
+        $this->assertInstanceOf('\Mutagenesis\Mutation\OperatorIncrement', $mutant->getMutation());
         $this->assertTrue($file->hasMutation('OperatorIncrement'));
         $this->assertFalse($file->hasMutation('OperatorAddition'));
     }
@@ -227,9 +242,11 @@ class MutableTest extends \PHPUnit_Framework_TestCase
     {
         $file = new Mutable($this->root . '/math4.php');
         $file->generate();
-        $return = $file->getMutations();
-        $this->assertEquals(1, count($return));
-        $this->assertInstanceOf('\Mutagenesis\Mutation\OperatorIncrement', $return[0]['mutation']);
+        $mutants = $file->getMutants()->all();
+        $mutants->rewind();
+        $mutant = $mutants->current();
+        $this->assertEquals(1, count($mutants));
+        $this->assertInstanceOf('\Mutagenesis\Mutation\OperatorIncrement', $mutant->getMutation());
         $this->assertTrue($file->hasMutation('OperatorIncrement'));
         $this->assertFalse($file->hasMutation('OperatorAddition'));
     }
@@ -241,9 +258,11 @@ class MutableTest extends \PHPUnit_Framework_TestCase
     {
         $file = new Mutable($this->root . '/bool1.php');
         $file->generate();
-        $return = $file->getMutations();
-        $this->assertEquals(1, count($return));
-        $this->assertInstanceOf('\Mutagenesis\Mutation\BooleanTrue', $return[0]['mutation']);
+        $mutants = $file->getMutants()->all();
+        $mutants->rewind();
+        $mutant = $mutants->current();
+        $this->assertEquals(1, count($mutants));
+        $this->assertInstanceOf('\Mutagenesis\Mutation\BooleanTrue', $mutant->getMutation());
         $this->assertTrue($file->hasMutation('BooleanTrue'));
         $this->assertFalse($file->hasMutation('OperatorAddition'));
     }
@@ -255,8 +274,7 @@ class MutableTest extends \PHPUnit_Framework_TestCase
     {
         $file = new Mutable($this->root . '/bool3.php');
         $file->generate();
-        $return = $file->getMutations();
-        $this->assertEquals(0, count($return));
+        $this->assertEquals(0, $file->getMutants()->count());
     }
 
     /**
@@ -266,9 +284,11 @@ class MutableTest extends \PHPUnit_Framework_TestCase
     {
         $file = new Mutable($this->root . '/bool2.php');
         $file->generate();
-        $return = $file->getMutations();
-        $this->assertEquals(1, count($return));
-        $this->assertInstanceOf('\Mutagenesis\Mutation\BooleanFalse', $return[0]['mutation']);
+        $mutants = $file->getMutants()->all();
+        $mutants->rewind();
+        $mutant = $mutants->current();
+        $this->assertEquals(1, count($mutants));
+        $this->assertInstanceOf('\Mutagenesis\Mutation\BooleanFalse', $mutant->getMutation());
         $this->assertTrue($file->hasMutation('BooleanFalse'));
         $this->assertFalse($file->hasMutation('OperatorAddition'));
     }
@@ -280,15 +300,15 @@ class MutableTest extends \PHPUnit_Framework_TestCase
     {
         $file = new Mutable($this->root . '/bool2.php');
         $file->generate();
-        $mutations = $file->getMutations();
+        $mutants = $file->getMutants();
         $mutables = $file->getMutables();
 
-        $this->assertGreaterThan(0, count($mutations));
+        $this->assertGreaterThan(0, count($mutants));
         $this->assertGreaterThan(0, count($mutables));
 
         $file->cleanup();
 
-        $this->assertEquals(array(), $file->getMutations());
+        $this->assertInstanceOf('\Mutagenesis\Mutant\MutantCollectionInterface', $file->getMutants());
         $this->assertEquals(array(), $file->getMutables());
     }
 
@@ -312,12 +332,13 @@ class MutableTest extends \PHPUnit_Framework_TestCase
     {
         $file = new Mutable(__DIR__ . '/_files/IfClause.php');
         $file->generate();
-        $mutations = $file->getMutations();
-        $mutation = $mutations[0];
-        $this->assertEquals(__DIR__ . '/_files/IfClause.php', $mutation['file']);
-        $this->assertEquals('Some_Class_With_If_Clause_In_Method', $mutation['class']);
-        $this->assertEquals('_getSession', $mutation['method']);
-        $this->assertEquals('', $mutation['args']);
+        $mutants = $file->getMutants()->all();
+        $mutants->rewind();
+        $mutant = $mutants->current();
+        $this->assertEquals(__DIR__ . '/_files/IfClause.php', $mutant->getFileName());
+        $this->assertEquals('Some_Class_With_If_Clause_In_Method', $mutant->getClassName());
+        $this->assertEquals('_getSession', $mutant->getMethodName());
+        $this->assertEquals('', $mutant->getArguments());
         $block = <<<BLOCK
 
         static \$session = null;
@@ -328,29 +349,31 @@ class MutableTest extends \PHPUnit_Framework_TestCase
         }
     
 BLOCK;
-        $this->assertEquals($block, $this->_reconstructFromTokens($mutation['tokens']));
+        $this->assertEquals($block, $this->_reconstructFromTokens($mutant->getTokens()));
     }
 
     public function testCreatesFullyNamespacedClassNames()
     {
         $file = new Mutable(dirname(__FILE__) . '/_files/SomeNamespacedClassName.php');
         $file->generate();
-        $mutations = $file->getMutations();
-        $mutation = $mutations[0];
-        $this->assertEquals(dirname(__FILE__) . '/_files/SomeNamespacedClassName.php', $mutation['file']);
-        $this->assertEquals('ClassName', $mutation['class']);
+        $mutants = $file->getMutants()->all();
+        $mutants->rewind();
+        $mutant = $mutants->current();
+        $this->assertEquals(dirname(__FILE__) . '/_files/SomeNamespacedClassName.php', $mutant->getFileName());
+        $this->assertEquals('ClassName', $mutant->getClassName());
     }
 
     public function testCreatesAccurateMapOfBracesWithComplexStringInterning()
     {
         $file = new Mutable(dirname(__FILE__) . '/_files/ComplexInternString.php');
         $file->generate();
-        $mutations = $file->getMutations();
-        $mutation = $mutations[0];
-        $this->assertEquals(dirname(__FILE__) . '/_files/ComplexInternString.php', $mutation['file']);
-        $this->assertEquals('Some_Class_With_ComplexInternString', $mutation['class']);
-        $this->assertEquals('_getSession', $mutation['method']);
-        $this->assertEquals('', $mutation['args']);
+        $mutants = $file->getMutants()->all();
+        $mutants->rewind();
+        $mutant = $mutants->current();
+        $this->assertEquals(dirname(__FILE__) . '/_files/ComplexInternString.php', $mutant->getFileName());
+        $this->assertEquals('Some_Class_With_ComplexInternString', $mutant->getClassName());
+        $this->assertEquals('_getSession', $mutant->getMethodName());
+        $this->assertEquals('', $mutant->getArguments());
         $block = <<<BLOCK
 
         static \$session = null;
@@ -362,19 +385,20 @@ BLOCK;
         return false;
     
 BLOCK;
-        $this->assertEquals($block, $this->_reconstructFromTokens($mutation['tokens']));
+        $this->assertEquals($block, $this->_reconstructFromTokens($mutant->getTokens()));
     }
     
     public function testCreatesLeavesClosuresIntact()
     {
         $file = new Mutable(dirname(__FILE__) . '/_files/Closure.php');
         $file->generate();
-        $mutations = $file->getMutations();
-        $mutation = $mutations[0];
-        $this->assertEquals(dirname(__FILE__) . '/_files/Closure.php', $mutation['file']);
-        $this->assertEquals('Some_Class_With_Closure', $mutation['class']);
-        $this->assertEquals('setSession', $mutation['method']);
-        $this->assertEquals('$session = null', $mutation['args']);
+        $mutants = $file->getMutants()->all();
+        $mutants->rewind();
+        $mutant = $mutants->current();
+        $this->assertEquals(dirname(__FILE__) . '/_files/Closure.php', $mutant->getFileName());
+        $this->assertEquals('Some_Class_With_Closure', $mutant->getClassName());
+        $this->assertEquals('setSession', $mutant->getMethodName());
+        $this->assertEquals('$session = null', $mutant->getArguments());
         $block = <<<BLOCK
 
         if (\$session === null) {
@@ -387,7 +411,7 @@ BLOCK;
         return false;
     
 BLOCK;
-        $this->assertEquals($block, $this->_reconstructFromTokens($mutation['tokens']));
+        $this->assertEquals($block, $this->_reconstructFromTokens($mutant->getTokens()));
     }
     
     /**

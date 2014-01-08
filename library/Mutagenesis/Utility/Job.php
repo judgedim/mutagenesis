@@ -21,34 +21,36 @@
 
 namespace Mutagenesis\Utility;
 
+use Mutagenesis\Mutant\MutantInterface;
+
 class Job
 {
     /**
      * Generate a new Job script to be executed under a separate PHP process
      *
-     * @param array $mutation Mutation data and objects to be used
-     * @param array $args
-     * @param int $timeout
-     * @param string|null $bootstrap
+     * @param MutantInterface|bool $mutant Mutant object to be used
+     * @param array                $args
+     * @param int                  $timeout
+     * @param string|null          $bootstrap
+     *
      * @return string
      */
-    public function generate(array $mutation = array(), array $args = array(), $timeout = 60, $bootstrap = null)
+    public function generate($mutant, array $args = array(), $timeout = 60, $bootstrap = null)
     {
-        $serializedArgs = addslashes(serialize($args));
-        $serializedMutation = addcslashes(serialize($mutation), "'\\");
+        $serializedArgs     = addslashes(serialize($args));
+        $serializedMutation = addcslashes(serialize($mutant), "'\\");
         if (is_null($bootstrap)) {
             $bootstrap = 'null';
         } else {
             $bootstrap = '"' . addslashes($bootstrap) . '"';
         }
 
-        if (file_exists(__DIR__.'/../../../vendor/autoload.php')) {
-            $autoload =  'include "'.realpath(__DIR__.'/../../../vendor/autoload.php').'";';
-        } else if (file_exists(__DIR__.'/../../../../../autoload.php')) {
-            $autoload = 'include "'.realpath(__DIR__.'/../../../../../autoload.php').'";';
-        } else { 
-            $mutagenesisPath = realpath(__DIR__ . '/../../');
-            $autoload = <<<EOS
+        if (file_exists(__DIR__ . '/../../../vendor/autoload.php')) {
+            $autoload = 'include "' . realpath(__DIR__ . '/../../../vendor/autoload.php') . '";';
+        } else if (file_exists(__DIR__ . '/../../../../../autoload.php')) {
+            $autoload = 'include "' . realpath(__DIR__ . '/../../../../../autoload.php') . '";';
+        } else {
+            $autoload        = <<<EOS
 require_once 'Mutagenesis/Loader.php';
 \$loader = new \Mutagenesis\Loader;
 \$loader->register();
@@ -85,7 +87,8 @@ try {
 }
 pcntl_alarm(0);
 SCRIPT;
+
         return $script;
     }
-    
+
 }

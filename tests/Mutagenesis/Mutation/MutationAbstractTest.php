@@ -27,7 +27,7 @@ use Mockery as m;
 class MutationAbstractTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Mutagenesis\Mutation\MutationAbstract
+     * @var MutationAbstract
      */
     public $mutation;
 
@@ -69,5 +69,90 @@ class MutationAbstractTest extends \PHPUnit_Framework_TestCase
         $result = $this->mutation->getDiffProvider();
 
         $this->assertSame($provider, $result);
+    }
+
+    /**
+     * @dataProvider checkDiffProvider
+     */
+    public function testCheckDiff($tokensOriginal, $tokensMutated, $expected)
+    {
+        $this->mutation->shouldReceive('getMutation')->andReturn($tokensMutated);
+
+        $this->mutation->mutate($tokensOriginal);
+        $actual = $this->mutation->checkDiff();
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function checkDiffProvider()
+    {
+        return array(
+            array(
+                array(array(T_WHITESPACE, '\n  ', 6), array(T_RETURN, 'return  ', 7), array(T_WHITESPACE, '', 7), array(T_STRING, 'false', 7), ';'),
+                array(array(T_WHITESPACE, '\n  ', 6), array(T_RETURN, 'return  ', 7), array(T_WHITESPACE, '', 7), array(T_STRING, 'false', 7), ';'),
+                false
+            ),
+            array(
+                array(array(T_WHITESPACE, '\n  ', 6), array(T_RETURN, 'return  ', 7), array(T_WHITESPACE, '', 7), array(T_STRING, 'false', 7), ';'),
+                array(array(T_WHITESPACE, '\n  ', 6), array(T_RETURN, 'return  ', 7), array(T_WHITESPACE, '', 7), array(T_STRING, 'true', 7), ';'),
+                true
+            ),
+            array(
+                array('+'),
+                array('-'),
+                true
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider getDiffTestProvider
+     */
+    public function testGetDiff($tokensOriginal, $tokensMutated, $expected)
+    {
+        $this->mutation->shouldReceive('getMutation')->andReturn($tokensMutated);
+
+        $this->mutation->mutate($tokensOriginal);
+        $actual = $this->mutation->getDiff();
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function getDiffTestProvider()
+    {
+        $expected1 = <<<BLOCK
+--- Original
++++ New
+@@ @@
+-\\n  return  false;
++\\n  return  true;
+
+BLOCK;
+
+        $expected2 = <<<BLOCK
+--- Original
++++ New
+@@ @@
+-+
++-
+
+BLOCK;
+        return array(
+            array(
+                array(array(T_WHITESPACE, '\n  ', 6), array(T_RETURN, 'return  ', 7), array(T_WHITESPACE, '', 7), array(T_STRING, 'false', 7), ';'),
+                array(array(T_WHITESPACE, '\n  ', 6), array(T_RETURN, 'return  ', 7), array(T_WHITESPACE, '', 7), array(T_STRING, 'false', 7), ';'),
+                ''
+            ),
+            array(
+                array(array(T_WHITESPACE, '\n  ', 6), array(T_RETURN, 'return  ', 7), array(T_WHITESPACE, '', 7), array(T_STRING, 'false', 7), ';'),
+                array(array(T_WHITESPACE, '\n  ', 6), array(T_RETURN, 'return  ', 7), array(T_WHITESPACE, '', 7), array(T_STRING, 'true', 7), ';'),
+                $expected1
+            ),
+            array(
+                array('+'),
+                array('-'),
+                $expected2
+            ),
+        );
     }
 }

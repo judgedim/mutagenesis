@@ -21,17 +21,71 @@
 
 namespace Mutagenesis\Mutant;
 
-use Mutagenesis\Testee;
+use Mutagenesis\Mutation;
 
 interface MutantInterface
 {
     /**
-     * @return array
+     * @return Mutation\MutationAbstract
      */
-    public function getMutations();
+    public function getMutation();
 
     /**
-     * @return Testee\TesteeInterface
+     * @return array
      */
-    public function getTestee();
+    public function getTokens();
+
+    /**
+     * @param bool $captured
+     *
+     * @return mixed
+     */
+    public function setCaptured($captured);
+
+    /**
+     * @param string $stdError
+     *
+     * @return mixed
+     */
+    public function setStdError($stdError);
+
+    /**
+     * @return bool
+     */
+    public function isCaptured();
+
+    /**
+     * @return string
+     */
+    public function getStdError();
+
+    /**
+     * @return string
+     */
+    public function mutate();
+
+    /**
+     * @return string
+     */
+    public function getFileName();
+
+    /**
+     * @return string
+     */
+    public function getClassName();
+
+    /**
+     * @return string
+     */
+    public function getMethodName();
+
+    /**
+     * @return array
+     */
+    public function getArguments();
+
+    /**
+     * @return string
+     */
+    public function getDiff();
 }

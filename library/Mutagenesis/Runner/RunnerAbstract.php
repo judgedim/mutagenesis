@@ -98,13 +98,20 @@ abstract class RunnerAbstract
      * @var \Mutagenesis\Renderer\Text
      */
     protected $_renderer = null;
-    
+
     /**
      * Name of the renderer, e.g. text, to utilise
      *
      * @var string
      */
     protected $_rendererName = 'Text';
+
+    /**
+     * Path to logs
+     *
+     * @var string
+     */
+    protected $_logPath = './';
 
     /**
      * Instance of \Mutagenesis\Runkit used to apply and reverse mutations
@@ -145,21 +152,21 @@ abstract class RunnerAbstract
      * @var array
      */
     protected $_options = array();
-    
+
     /**
      * Timeout in seconds allowed per test execution.
      *
      * @var int
      */
     protected $_timeout = 60;
-    
+
     /**
      * Test framework bootstrap
      *
      * @var string
      */
     protected $_bootstrap = null;
-    
+
     /**
      * Flag to add detailed reports (including test results) about
      * the mutations which caused test failures (i.e. captured)
@@ -167,7 +174,7 @@ abstract class RunnerAbstract
      * @var bool
      */
     protected $_detailCaptures = false;
-    
+
     /**
      * Execute the runner
      *
@@ -179,6 +186,7 @@ abstract class RunnerAbstract
      * Set the base directory of the project being mutated
      *
      * @param string $dir
+     *
      * @return $this
      * @throws RuntimeException
      */
@@ -186,9 +194,10 @@ abstract class RunnerAbstract
     {
         $dir = rtrim($dir, ' \\/');
         if (!is_dir($dir) || !is_readable($dir)) {
-            throw new RuntimeException('Invalid base directory: "'.$dir.'"');
+            throw new RuntimeException('Invalid base directory: "' . $dir . '"');
         }
         $this->_baseDirectory = $dir;
+
         return $this;
     }
 
@@ -206,6 +215,7 @@ abstract class RunnerAbstract
      * Set the source directory of the project being mutated
      *
      * @param string $dir
+     *
      * @return $this
      * @throws RuntimeException
      */
@@ -213,9 +223,10 @@ abstract class RunnerAbstract
     {
         $dir = rtrim($dir, ' \\/');
         if (!is_dir($dir) || !is_readable($dir)) {
-            throw new RuntimeException('Invalid source directory: "'.$dir.'"');
+            throw new RuntimeException('Invalid source directory: "' . $dir . '"');
         }
         $this->_sourceDirectory = $dir;
+
         return $this;
     }
 
@@ -239,6 +250,7 @@ abstract class RunnerAbstract
     public function addSourceExcludes(array $excludes)
     {
         $this->_sourceExcludes = array_merge($this->_sourceExcludes, $excludes);
+
         return $this;
     }
 
@@ -252,6 +264,7 @@ abstract class RunnerAbstract
     public function setSourceExcludes(array $excludes)
     {
         $this->_sourceExcludes = $excludes;
+
         return $this;
     }
 
@@ -269,6 +282,7 @@ abstract class RunnerAbstract
      * Set the test directory of the project being mutated
      *
      * @param string $dir
+     *
      * @return $this
      * @throws RuntimeException
      */
@@ -276,9 +290,10 @@ abstract class RunnerAbstract
     {
         $dir = rtrim($dir, ' \\/');
         if (!is_dir($dir) || !is_readable($dir)) {
-            throw new RuntimeException('Invalid test directory: "'.$dir.'"');
+            throw new RuntimeException('Invalid test directory: "' . $dir . '"');
         }
         $this->_testDirectory = $dir;
+
         return $this;
     }
 
@@ -296,6 +311,7 @@ abstract class RunnerAbstract
      * Set the cache directory of the project being mutated
      *
      * @param string $dir
+     *
      * @return $this
      * @throws RuntimeException
      */
@@ -303,9 +319,10 @@ abstract class RunnerAbstract
     {
         $dir = rtrim($dir, ' \\/');
         if (!is_dir($dir) || !is_readable($dir)) {
-            throw new RuntimeException('Invalid cache directory: "'.$dir.'"');
+            throw new RuntimeException('Invalid cache directory: "' . $dir . '"');
         }
         $this->_cacheDirectory = $dir;
+
         return $this;
     }
 
@@ -319,6 +336,7 @@ abstract class RunnerAbstract
         if (is_null($this->_cacheDirectory)) {
             return sys_get_temp_dir();
         }
+
         return $this->_cacheDirectory;
     }
 
@@ -326,11 +344,13 @@ abstract class RunnerAbstract
      * Set name of the test adapter to use
      *
      * @param string $constraint
+     *
      * @return $this
      */
     public function setAdapterConstraint($constraint)
     {
         $this->_adapterConstraint = $constraint;
+
         return $this;
     }
 
@@ -348,11 +368,13 @@ abstract class RunnerAbstract
      * Set name of the test adapter to use
      *
      * @param string $adapter
+     *
      * @return $this
      */
     public function setAdapterName($adapter)
     {
         $this->_adapterName = $adapter;
+
         return $this;
     }
 
@@ -370,6 +392,7 @@ abstract class RunnerAbstract
      * Options to pass to adapter's underlying command
      *
      * @param string $optionString
+     *
      * @return $this
      */
     public function setAdapterOption($optionString)
@@ -378,12 +401,15 @@ abstract class RunnerAbstract
             $this->_adapterOptions,
             explode(' ', $optionString)
         );
+
         return $this;
     }
 
     /**
      * Set many options for adapter's underlying cli command
+     *
      * @param array|string $options Array or serialized array of options
+     *
      * @return self
      */
     public function setAdapterOptions($options)
@@ -394,6 +420,7 @@ abstract class RunnerAbstract
         foreach ($options as $value) {
             $this->setAdapterOption($value);
         }
+
         return $this;
     }
 
@@ -417,14 +444,15 @@ abstract class RunnerAbstract
     public function getAdapter()
     {
         if (is_null($this->_adapter)) {
-            $name = ucfirst(strtolower($this->getAdapterName()));
-            $file = '/Adapter/' . $name . '.php';
+            $name  = ucfirst(strtolower($this->getAdapterName()));
+            $file  = '/Adapter/' . $name . '.php';
             $class = 'Mutagenesis\\Adapter\\' . $name;
             if (!file_exists(dirname(dirname(__FILE__)) . $file)) {
                 throw new ConfigurationException('Invalid Adapter name: ' . strtolower($name));
             }
             $this->_adapter = new $class;
         }
+
         return $this->_adapter;
     }
 
@@ -432,11 +460,13 @@ abstract class RunnerAbstract
      * Set a test framework adapter.
      *
      * @param \Mutagenesis\Adapter\AdapterAbstract $adapter
+     *
      * @return $this
      */
     public function setAdapter(AdapterAbstract $adapter)
     {
         $this->_adapter = $adapter;
+
         return $this;
     }
 
@@ -444,11 +474,13 @@ abstract class RunnerAbstract
      * Set name of the renderer to use
      *
      * @param string $rname
+     *
      * @return $this
      */
     public function setRendererName($rname)
     {
         $this->_rendererName = $rname;
+
         return $this;
     }
 
@@ -461,7 +493,27 @@ abstract class RunnerAbstract
     {
         return $this->_rendererName;
     }
-    
+
+    /**
+     * @param string $logPath
+     *
+     * @return RunnerAbstract
+     */
+    public function setLogPath($logPath)
+    {
+        $this->_logPath = $logPath;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogPath()
+    {
+        return $this->_logPath;
+    }
+
     /**
      * Get a result renderer. Creates a new one based on the configured
      * renderer name passed on the CLI if not already set.
@@ -472,13 +524,14 @@ abstract class RunnerAbstract
     public function getRenderer()
     {
         if (is_null($this->_renderer)) {
-            $name = ucfirst(strtolower($this->getRendererName()));
+            $name  = ucfirst(strtolower($this->getRendererName()));
             $class = 'Mutagenesis\\Renderer\\' . $name;
             if (!class_exists($class)) {
                 throw new ConfigurationException('Invalid Renderer name: ' . strtolower($name));
             }
             $this->_renderer = new $class;
         }
+
         return $this->_renderer;
     }
 
@@ -486,11 +539,13 @@ abstract class RunnerAbstract
      * Set a test framework adapter.
      *
      * @param \Mutagenesis\Renderer\RendererInterface $renderer
+     *
      * @return $this
      */
     public function setRenderer(RendererInterface $renderer)
     {
         $this->_renderer = $renderer;
+
         return $this;
     }
 
@@ -498,11 +553,13 @@ abstract class RunnerAbstract
      * Set a custom runkit instance.
      *
      * @param \Mutagenesis\Utility\Runkit $runkit
+     *
      * @return $this
      */
     public function setRunkit(Runkit $runkit)
     {
         $this->_runkit = $runkit;
+
         return $this;
     }
 
@@ -516,7 +573,7 @@ abstract class RunnerAbstract
     public function getRunkit()
     {
         if (is_null($this->_runkit)) {
-            if(!in_array('runkit', get_loaded_extensions())) {
+            if (!in_array('runkit', get_loaded_extensions())) {
                 throw new ConfigurationException(
                     'Runkit extension is not loaded. Unfortunately, runkit'
                     . ' is essential for Mutagenesis. Please see the manual or'
@@ -526,6 +583,7 @@ abstract class RunnerAbstract
             }
             $this->_runkit = new Runkit();
         }
+
         return $this->_runkit;
     }
 
@@ -533,25 +591,30 @@ abstract class RunnerAbstract
      * Set a generic option
      *
      * @param string $name
-     * @param mixed $value
+     * @param mixed  $value
+     *
+     * @return $this
      */
     public function setOption($name, $value)
     {
         $this->_options[$name] = $value;
+
         return $this;
     }
-    
+
     /**
      * Set generic options
      *
-     * @param string $name
-     * @param mixed $value
+     * @param array $options
+     *
+     * @return $this
      */
     public function setOptions(array $options)
     {
-        foreach ($options as $name=>$value) {
+        foreach ($options as $name => $value) {
             $this->setOption($name, $value);
         }
+
         return $this;
     }
 
@@ -563,15 +626,16 @@ abstract class RunnerAbstract
     public function getOptions()
     {
         $options = array(
-            'src' => $this->getSourceDirectory(),
+            'src'         => $this->getSourceDirectory(),
             'src-exclude' => $this->getSourceExcludes(),
-            'tests' => $this->getTestDirectory(),
-            'base' => $this->getBaseDirectory(),
-            'cache' => $this->getCacheDirectory(),
-            'clioptions' => $this->getAdapterOptions(),
-            'constraint' => $this->getAdapterConstraint()
+            'tests'       => $this->getTestDirectory(),
+            'base'        => $this->getBaseDirectory(),
+            'cache'       => $this->getCacheDirectory(),
+            'clioptions'  => $this->getAdapterOptions(),
+            'constraint'  => $this->getAdapterConstraint()
         );
         $options = $options + $this->_options;
+
         return $options;
     }
 
@@ -587,6 +651,7 @@ abstract class RunnerAbstract
             $generator->generate();
             $this->_mutables = $generator->getMutables();
         }
+
         return $this->_mutables;
     }
 
@@ -595,12 +660,15 @@ abstract class RunnerAbstract
      * TODO Add interface
      *
      * @param \Mutagenesis\Generator
+     *
+     * @return $this
      */
     public function setGenerator(Generator $generator)
     {
         $this->_generator = $generator;
         $this->_generator->setSourceDirectory($this->getSourceDirectory());
         $this->_generator->setSourceExcludes($this->getSourceExcludes());
+
         return $this;
     }
 
@@ -616,6 +684,7 @@ abstract class RunnerAbstract
             $this->_generator->setSourceDirectory($this->getSourceDirectory());
             $this->_generator->setSourceExcludes($this->getSourceExcludes());
         }
+
         return $this->_generator;
     }
 
@@ -623,11 +692,13 @@ abstract class RunnerAbstract
      * Set timeout in seconds for each test run
      *
      * @param int $timeout
+     *
      * @return $this
      */
     public function setTimeout($timeout)
     {
         $this->_timeout = (int) $timeout;
+
         return $this;
     }
 
@@ -645,6 +716,7 @@ abstract class RunnerAbstract
      * Set a bootstrap file included before tests run (e.g. setup autoloading)
      *
      * @param string $file
+     *
      * @return $this
      * @throws RuntimeException
      */
@@ -654,9 +726,10 @@ abstract class RunnerAbstract
             return $this;
         }
         if (!file_exists($file) || !is_readable($file)) {
-            throw new RuntimeException('Invalid bootstrap file: "'.$file.'"');
+            throw new RuntimeException('Invalid bootstrap file: "' . $file . '"');
         }
         $this->_bootstrap = $file;
+
         return $this;
     }
 
@@ -674,6 +747,7 @@ abstract class RunnerAbstract
                 return $this->getTestDirectory() . '/Bootstrap.php';
             }
         }
+
         return $this->_bootstrap;
     }
 
@@ -682,11 +756,13 @@ abstract class RunnerAbstract
      * the mutations which caused test failures (i.e. captured)
      *
      * @param bool $bool
+     *
      * @return $this
      */
     public function setDetailCaptures($bool)
     {
         $this->_detailCaptures = (bool) $bool;
+
         return $this;
     }
 
@@ -696,7 +772,7 @@ abstract class RunnerAbstract
      *
      * @return bool
      */
-    public function getDetailCaptures()
+    public function isDetailCaptures()
     {
         return $this->_detailCaptures;
     }

@@ -37,6 +37,7 @@ interface RendererInterface
      *
      * @param string $result Result state from test adapter
      * @param string $output Result output from test adapter
+     *
      * @return string Pretest output to echo to client
      */
     public function renderPretest($result, $output);
@@ -46,6 +47,7 @@ interface RendererInterface
      * and the successful execution of the related test suite
      *
      * @param bool $result Whether unit tests passed (bad) or not (good)
+     *
      * @return string
      */
     public function renderProgressMark($result);
@@ -53,13 +55,32 @@ interface RendererInterface
     /**
      * Render the final Mutagenesis report
      *
-     * @param integer $total Total mutations made and tested
-     * @param integer $killed Number of mutations that did cause a test failure
-     * @param integer $escaped Number of mutations that did not cause a test failure
-     * @param array $mutationDiffs Array of mutation diff strings showing each test-fail mutation
-     * @param array $mutantsCaptured Array of captured mutants.
-     * @param string $output Result output from test adapter
+     * @param integer $total    Total mutations made and tested
+     * @param integer $killed   Number of mutations that did cause a test failure
+     * @param integer $escaped  Number of mutations that did not cause a test failure
+     * @param array   $mutables Array of mutables.
+     * @param string  $output   Result output from test adapter
+     *
      * @return string
      */
-    public function renderReport($total, $killed, $escaped, array $mutationDiffs, array $mutantsCaptured, $output = '');
+    public function renderReport($total, $killed, $escaped, array $mutables, $output = '');
+
+    /**
+     * @return \Mutagenesis\Utility\Diff\ProviderInterface
+     */
+    public function getDiffProvider();
+
+    /**
+     * @param bool $bool
+     *
+     * @return mixed
+     */
+    public function setDetailCaptures($bool);
+
+    /**
+     * @param string $logPath
+     *
+     * @return mixed
+     */
+    public function setLogPath($logPath);
 }

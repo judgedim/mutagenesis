@@ -25,11 +25,16 @@ use Mutagenesis\Renderer\Text;
 
 class TextTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Text
+     */
+    private $_renderer;
+
     public function setUp()
     {
         $this->_renderer = new Text();
     }
-    
+
     public function testRendersOpeningMessage()
     {
         $this->assertEquals(
@@ -37,72 +42,66 @@ class TextTest extends \PHPUnit_Framework_TestCase
             $this->_renderer->renderOpening()
         );
     }
-    
+
     public function testRendersFailMessageIfTestSuiteDidNotPassDuringPretest()
     {
-        $result = false;
+        $result     = false;
         $testOutput = 'Stuff failed';
         $this->assertEquals(
             'Before you face the Mutants, you first need a 100% pass rate!'
-                . PHP_EOL
-                . 'That means no failures or errors (we\'ll allow skipped or incomplete tests).'
-                . PHP_EOL . PHP_EOL
-                . $testOutput
-                . PHP_EOL . PHP_EOL,
+            . PHP_EOL
+            . 'That means no failures or errors (we\'ll allow skipped or incomplete tests).'
+            . PHP_EOL . PHP_EOL
+            . $testOutput
+            . PHP_EOL . PHP_EOL,
             $this->_renderer->renderPretest($result, $testOutput)
         );
     }
-    
+
     public function testRendersPassMessageIfTestSuiteDidPassDuringPretest()
     {
-        $result = true;
+        $result     = true;
         $testOutput = 'Stuff passed';
         $this->assertEquals(
             'All initial checks successful! The mutagenic slime has been activated.'
-                . PHP_EOL . PHP_EOL
-                . '    > ' . $testOutput
-                . PHP_EOL . PHP_EOL . 'Stand by...Mutation Testing commencing.'
-                . PHP_EOL . PHP_EOL,
+            . PHP_EOL . PHP_EOL
+            . '    > ' . $testOutput
+            . PHP_EOL . PHP_EOL . 'Stand by...Mutation Testing commencing.'
+            . PHP_EOL . PHP_EOL,
             $this->_renderer->renderPretest($result, $testOutput)
         );
     }
-    
+
     public function testRendersProgressMarkAsPeriodCharacterIfTestResultWasFalse()
     {
         $this->assertEquals('.', $this->_renderer->renderProgressMark(false));
     }
-    
+
     public function testRendersProgressMarkAsECharacterIfTestResultWasFalse()
     {
         $this->assertEquals('E', $this->_renderer->renderProgressMark(true));
     }
-    
+
     public function testRendersFinalReportWithNoEscapeesFromASingleMutant()
     {
         $this->assertEquals(
             PHP_EOL . PHP_EOL
-                . '1 Mutant born out of the mutagenic slime!'
-                . PHP_EOL . PHP_EOL
-                . 'No Mutants survived! Someone in QA will be happy.'
-                . PHP_EOL . PHP_EOL,
+            . 'Score: 100%'
+            . PHP_EOL . PHP_EOL
+            . '1 Mutant born out of the mutagenic slime!'
+            . PHP_EOL . PHP_EOL
+            . 'No Mutants survived! Someone in QA will be happy.'
+            . PHP_EOL . PHP_EOL,
             $this->_renderer->renderReport(1, 1, 0, array(), array(), '')
-        );   
+        );
     }
-    
+
     public function testRendersFinalReportWithEscapeesFromASingleMutant()
     {
-        $escaped = $this->getMock(
-            'Mutagenesis\\Mutation\\BooleanTrue',
-            array('getDiff'),
-            array(),
-            'MockBooleanTrue',
-            false
-        );
-        $escaped->expects($this->once())
-            ->method('getDiff')
-            ->will($this->returnValue('diff1'));
         $expected = <<<EXPECTED
 
+
+Score: 0%
 
 1 Mutant born out of the mutagenic slime!
 
@@ -118,17 +117,57 @@ Happy Hunting! Remember that some Mutants may just be Ghosts (or if you want to 
 
 
 EXPECTED;
-        $mutations = array(
+        $mutable  = $this->getMock(
+            'Mutagenesis\\Mutable',
             array(
-                'class' => 'Foo',
-                'method' => 'bar',
-                'file' => '/path/to/foo.php',
-                'mutation' => $escaped
+                'getMutantsEscaped',
+                'getMutantsCaptured'
             )
         );
+
+        $mutant = $this->getMock(
+            'Mutagenesis\\Mutant\\Mutant',
+            array(
+                'getClassName',
+                'getMethodName',
+                'getFileName',
+                'getDiff',
+            ),
+            array(),
+            '',
+            false
+        );
+
+        $mutant->expects($this->once())
+            ->method('getClassName')
+            ->will($this->returnValue('Foo'));
+
+        $mutant->expects($this->once())
+            ->method('getMethodName')
+            ->will($this->returnValue('bar'));
+
+        $mutant->expects($this->once())
+            ->method('getFileName')
+            ->will($this->returnValue('/path/to/foo.php'));
+
+        $mutant->expects($this->once())
+            ->method('getDiff')
+            ->will($this->returnValue('diff1'));
+
+        $mutable->expects($this->once())
+            ->method('getMutantsEscaped')
+            ->will($this->returnValue(array(
+                $mutant
+            )));
+
+
+        $mutables = array(
+            $mutable
+        );
+
         $this->assertEquals(
             $expected,
-            $this->_renderer->renderReport(1, 0, 1, $mutations, array(), 'test1output')
-        );   
+            $this->_renderer->renderReport(1, 0, 1, $mutables, 'test1output')
+        );
     }
 }

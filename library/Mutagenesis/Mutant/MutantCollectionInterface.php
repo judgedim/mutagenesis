@@ -14,32 +14,29 @@
  *
  * @category   Mutagenesis
  * @package    Mutagenesis
- * @subpackage UnitTests
+ * @subpackage Mutant
  * @copyright  Copyright (c) 2010 Pádraic Brady (http://blog.astrumfutura.com)
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
+ * @author     Dmitry Maltsev <judgedim@gmail.com>
  */
 
-namespace MutagenesisTest\Diff;
+namespace Mutagenesis\Mutant;
 
-use Mutagenesis\Utility\Diff\PhpUnit;
-
-class PhpUnitTest extends \PHPUnit_Framework_TestCase
+interface MutantCollectionInterface extends \IteratorAggregate
 {
-    /**
-     * @var \Mutagenesis\Utility\Diff\PhpUnit
-     */
-    public $provider;
+    public function all();
+
+    public function push($mutant);
+
+    public function count();
 
     /**
-     * @return void
+     * @return \SplObjectStorage
      */
-    public function setUp()
-    {
-        $this->provider = new PhpUnit();
-    }
+    public function getMutantsEscaped();
 
-    public function testInstanseOfProviderInterface()
-    {
-        $this->assertInstanceOf('\Mutagenesis\Utility\Diff\ProviderInterface', $this->provider);
-    }
+    /**
+     * @return \SplObjectStorage
+     */
+    public function getMutantsCaptured();
 }

@@ -22,6 +22,7 @@
 namespace Mutagenesis\Adapter;
 
 use Mutagenesis\Runner\Base as BaseRunner;
+use Mutagenesis\Mutant\MutantInterface;
 
 abstract class AdapterAbstract
 {
@@ -45,15 +46,17 @@ abstract class AdapterAbstract
      * output from the last test run.
      *
      * @abstract
+     *
      * @param \Mutagenesis\Runner\Base $runner
-     * @param bool $useStdout
-     * @param bool $firstRun
-     * @param array $mutation
-     * @param array $testCases
+     * @param bool                     $useStdout
+     * @param bool                     $firstRun
+     * @param MutantInterface|bool     $mutant
+     * @param array                    $testCases
+     *
      * @return array
      */
     abstract public function runTests(BaseRunner $runner, $useStdout = false,
-    $firstRun = false, array $mutation = array(), array $testCases = array());
+                                      $firstRun = false, $mutant = false, array $testCases = array());
 
     /**
      * Set the test library output so it can be used later
@@ -73,6 +76,6 @@ abstract class AdapterAbstract
     public function getOutput()
     {
         return $this->_output;
-    }  
-    
+    }
+
 }

@@ -17,29 +17,18 @@
  * @subpackage UnitTests
  * @copyright  Copyright (c) 2010 Pádraic Brady (http://blog.astrumfutura.com)
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
+ * @author     Dmitry Maltsev <judgedim@gmail.com>
  */
 
-namespace MutagenesisTest\Diff;
+namespace Mutagenesis\Mutation\Factory;
 
-use Mutagenesis\Utility\Diff\PhpUnit;
-
-class PhpUnitTest extends \PHPUnit_Framework_TestCase
+interface MutationFactoryInterface
 {
     /**
-     * @var \Mutagenesis\Utility\Diff\PhpUnit
+     * @param string|array $token
+     * @param int          $index
+     *
+     * @return \Mutagenesis\Mutation\MutationAbstract
      */
-    public $provider;
-
-    /**
-     * @return void
-     */
-    public function setUp()
-    {
-        $this->provider = new PhpUnit();
-    }
-
-    public function testInstanseOfProviderInterface()
-    {
-        $this->assertInstanceOf('\Mutagenesis\Utility\Diff\ProviderInterface', $this->provider);
-    }
+    public static function create($token, $index);
 }

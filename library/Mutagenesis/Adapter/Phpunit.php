@@ -42,20 +42,21 @@ class Phpunit extends AdapterAbstract
      * Second element is an array containing the key "stdout" which stores the
      * output from the last test run.
      *
-     * @param BaseRunner $runner
-     * @param bool $useStdout
-     * @param bool $firstRun
-     * @param array $mutation
-     * @param array $testCases
+     * @param BaseRunner           $runner
+     * @param bool                 $useStdout
+     * @param bool                 $firstRun
+     * @param MutantInterface|bool $mutant
+     * @param array                $testCases
+     *
      * @return array
      */
     public function runTests(BaseRunner $runner, $useStdout = true,
-    $firstRun = false, array $mutation = array(), array $testCases = array())
+                             $firstRun = false, $mutant = false, array $testCases = array())
     {
-        $options = $runner->getOptions();
-        $job = new Job();
+        $options   = $runner->getOptions();
+        $job       = new Job();
         $outputKey = 'stdout';
-        if(!$useStdout) {
+        if (!$useStdout) {
             array_unshift($options['clioptions'], '--stderr');
             $outputKey = 'stderr';
         }
@@ -72,18 +73,18 @@ class Phpunit extends AdapterAbstract
         }
         if (count($testCases) > 0) { // tests cases always 0 on first run
             foreach ($testCases as $className => $case) {
-                $args = $options;
+                $args                 = $options;
                 $args['clioptions'][] = $className;
                 $args['clioptions'][] = $case['file'];
-                $output = self::execute(
+                $output               = self::execute(
                     $job->generate(
-                        $mutation,
+                        $mutant,
                         $args,
                         $runner->getTimeout(),
                         $runner->getBootstrap()
                     )
                 );
-                $res = $this->processOutput($output[$outputKey]);
+                $res                  = $this->processOutput($output[$outputKey]);
                 if (false === $res) {
                     return array($res, $output);
                 }
@@ -91,7 +92,7 @@ class Phpunit extends AdapterAbstract
         } else {
             $output = self::execute(
                 $job->generate(
-                    $mutation,
+                    $mutant,
                     $options,
                     /**
                      * We don't want the initial test run to time out because it
@@ -102,11 +103,12 @@ class Phpunit extends AdapterAbstract
                     $runner->getBootstrap()
                 )
             );
-            $res = $this->processOutput($output[$outputKey]);
+            $res    = $this->processOutput($output[$outputKey]);
             if (!$res) {
                 return array(false, $output);
             }
         }
+
         return array($res, $output);
     }
 
@@ -114,11 +116,13 @@ class Phpunit extends AdapterAbstract
      * Execute the generated job which is to call the static main method.
      *
      * @param string $jobScript
+     *
      * @return string $output
      */
     public static function execute($jobScript)
     {
         $output = Process::run($jobScript);
+
         return $output;
     }
 
@@ -132,9 +136,10 @@ class Phpunit extends AdapterAbstract
      * To prevent duplication of output from stdout, PHPUnit is hard
      * configured to write to stderrm(stdin is used in proc_open call)
      *
-     * @param array $arguments Mutagenesis arguments to pass to PHPUnit
+     * @param array       $arguments Mutagenesis arguments to pass to PHPUnit
      * @param string|null $mutation
      * @param string|null $bootstrap
+     *
      * @return void
      *
      * @throws \Exception
@@ -142,7 +147,7 @@ class Phpunit extends AdapterAbstract
     public static function main($arguments, $mutation = null, $bootstrap = null)
     {
         $arguments = unserialize($arguments);
-        
+
         /**
          * Grab the Runkit extension utility and apply the mutation if needed
          */
@@ -152,7 +157,7 @@ class Phpunit extends AdapterAbstract
                 if (!is_null($bootstrap)) {
                     require_once $bootstrap;
                 }
-                if(!in_array('runkit', get_loaded_extensions())) {
+                if (!in_array('runkit', get_loaded_extensions())) {
                     throw new \Exception(
                         'Runkit extension is not loaded. Unfortunately, runkit'
                         . ' is essential for Mutagenesis. Please see the manual or'
@@ -172,7 +177,7 @@ class Phpunit extends AdapterAbstract
         if (isset($arguments['tests'])) {
             chdir($arguments['tests']);
         }
-        $command = new \PHPUnit_TextUI_Command; 
+        $command = new \PHPUnit_TextUI_Command;
         if (empty($arguments['clioptions'])) {
             $arguments['clioptions'] = array();
         }
@@ -186,6 +191,7 @@ class Phpunit extends AdapterAbstract
      * mutation was detected by the test suite).
      *
      * @param string $output
+     *
      * @return bool
      */
     public static function processOutput($output)
@@ -212,7 +218,8 @@ class Phpunit extends AdapterAbstract
                 return false;
             }
         }
+
         return true;
-    } 
-    
+    }
+
 }
