@@ -32,9 +32,19 @@ class Mutant implements MutantInterface
     protected $testee;
 
     /**
-     * @var array
+     * @var Mutation\MutationAbstract
      */
-    protected $mutations = array();
+    protected $mutation;
+
+    /**
+     * @var bool
+     */
+    protected $captured = false;
+
+    /**
+     * @var string
+     */
+    protected $stdError;
 
     /**
      * @param Testee\TesteeInterface    $testee
@@ -42,24 +52,112 @@ class Mutant implements MutantInterface
      */
     public function __construct(Testee\TesteeInterface $testee, Mutation\MutationAbstract $mutation)
     {
-        $this->testee = $testee;
-        $this->mutations[] = $mutation;
-    }
-
-    /**
-     * @return Testee\TesteeInterface
-     */
-    public function getTestee()
-    {
-        return $this->testee;
+        $this->testee   = $testee;
+        $this->mutation = $mutation;
     }
 
     /**
      * @return array
      */
-    public function getMutations()
+    public function getTokens()
     {
-        return $this->mutations;
+        return $this->testee->getTokens();
+    }
+
+    /**
+     * @return Mutation\MutationAbstract
+     */
+    public function getMutation()
+    {
+        return $this->mutation;
+    }
+
+    /**
+     * @param bool $captured
+     *
+     * @return mixed
+     */
+    public function setCaptured($captured)
+    {
+        $this->captured = $captured;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCaptured()
+    {
+        return $this->captured;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileName()
+    {
+        return $this->testee->getFileName();
+    }
+
+    /**
+     * @return string
+     */
+    public function getClassName()
+    {
+        return $this->testee->getClassName();
+    }
+
+    /**
+     * @return string
+     */
+    public function getMethodName()
+    {
+        return $this->testee->getMethodName();
+    }
+
+    /**
+     * @return array
+     */
+    public function getArguments()
+    {
+        return $this->testee->getArguments();
+    }
+
+    /**
+     * @return string
+     */
+    public function getDiff()
+    {
+        return $this->mutation->getDiff();
+    }
+
+    /**
+     * Check the mutation actually mutates
+     *
+     * @return bool
+     */
+    public function checkDiff()
+    {
+        return $this->mutation->checkDiff();
+    }
+
+    /**
+     * @param string $stdError
+     *
+     * @return Mutant
+     */
+    public function setStdError($stdError)
+    {
+        $this->stdError = $stdError;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStdError()
+    {
+        return $this->stdError;
     }
 
     /**
@@ -68,7 +166,15 @@ class Mutant implements MutantInterface
     public function __sleep()
     {
         return array(
-            'index', 'testee', 'mutations'
+            'testee', 'mutation'
         );
+    }
+
+    /**
+     * @return string
+     */
+    public function mutate()
+    {
+        return $this->getMutation()->mutate($this->testee->getTokens());
     }
 }

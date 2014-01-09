@@ -21,6 +21,8 @@
 
 namespace Mutagenesis\Utility;
 
+use Mutagenesis\Mutant\MutantInterface;
+
 class Runkit
 {
     /**
@@ -35,41 +37,37 @@ class Runkit
     /**
      * Apply a mutation to the relevant file
      *
-     * @param array $mutation
+     * @param MutantInterface $mutant
+     *
      * @throws \Exception
      */
-    public function applyMutation(array $mutation)
+    public function applyMutation(MutantInterface $mutant)
     {
-        require_once $mutation['mutation']->getFilename();
-        $newBlock = $mutation['mutation']
-            ->mutate($mutation['tokens']);
-        $this->_methodPreserveCode = md5($mutation['method']);
-        if (runkit_method_rename(
-            $mutation['class'],
-            $mutation['method'],
-            $mutation['method'] . $this->_methodPreserveCode
-        ) == false) {
+        $class    = $mutant->getClassName();
+        $method   = $mutant->getMethodName();
+        $args     = $mutant->getArguments();
+        $filename = $mutant->getFileName();
+
+        require_once $filename;
+
+        $newBlock                  = $mutant->mutate();
+        $this->_methodPreserveCode = md5($method);
+        if (runkit_method_rename($class, $method, $method . $this->_methodPreserveCode) == false) {
             throw new \Exception(
-                'runkit_method_rename() failed from ' . $mutation['class']
-                . '::' . $mutation['method'] . ' to ' . $mutation['class']
-                . '::' . $mutation['method'] . $this->_methodPreserveCode
+                'runkit_method_rename() failed from ' . $class
+                . '::' . $method . ' to ' . $class
+                . '::' . $method . $this->_methodPreserveCode
                 . ' (mutation application)'
             );
         }
-        if(runkit_method_add(
-            $mutation['class'],
-            $mutation['method'],
-            $mutation['args'],
-            $newBlock,
-            $this->getMethodFlags($mutation)
-        ) == false) {
+        if (runkit_method_add($class, $method, $args, $newBlock, $this->getMethodFlags($mutant)) == false) {
             throw new \Exception(
                 'runkit_method_add() failed when replacing original '
-                . $mutation['class'] . '::' . $mutation['method']
-                . '(' . var_export($mutation['args']) . ') with a mutation of'
-                . ' type ' . get_class($mutation['mutation']) . ' using the'
+                . $class . '::' . $method
+                . '(' . var_export($args) . ') with a mutation of'
+                . ' type ' . get_class($mutant->getMutation()) . ' using the'
                 . ' following (mutated) source code from '
-                . $mutation['mutation']->getFilename() . ':' . PHP_EOL
+                . $filename . ':' . PHP_EOL
                 . $newBlock
             );
         }
@@ -78,30 +76,27 @@ class Runkit
     /**
      * Reverse a previously applied mutation to the given file
      *
-     * @param array $mutation
+     * @param MutantInterface $mutant
+     *
      * @throws \Exception
      */
-    public function reverseMutation(array $mutation)
+    public function reverseMutation(MutantInterface $mutant)
     {
-        if(runkit_method_remove(
-            $mutation['class'],
-            $mutation['method']
-        ) == false) {
+        $class  = $mutant->getClassName();
+        $method = $mutant->getMethodName();
+
+        if (runkit_method_remove($class, $method) == false) {
             throw new \Exception(
                 'runkit_method_remove() failed attempting to remove '
-                . $mutation['class'] . '::' . $mutation['method']
+                . $class . '::' . $method
             );
         }
-        if(runkit_method_rename(
-            $mutation['class'],
-            $mutation['method'] . $this->_methodPreserveCode,
-            $mutation['method']
-        ) == false) {
+        if (runkit_method_rename($class, $method . $this->_methodPreserveCode, $method) == false) {
             throw new \Exception(
                 'runkit_method_rename() failed renaming from '
-                . $mutation['class'] . '::' . $mutation['method']
-                . $this->_methodPreserveCode . ' to ' . $mutation['class']
-                . '::' . $mutation['method'] . ' (mutation reversal)'
+                . $class . '::' . $method
+                . $this->_methodPreserveCode . ' to ' . $class
+                . '::' . $method . ' (mutation reversal)'
             );
         }
     }
@@ -110,17 +105,18 @@ class Runkit
      * Get the appropriate ext/runkit method flag value to use during
      * a replacement via the runkit methods
      *
-     * @param array $mutation
+     * @param MutantInterface $mutant
+     *
      * @return int
      */
-    public function getMethodFlags(array $mutation)
+    public function getMethodFlags(MutantInterface $mutant)
     {
-        $reflectionClass = new \ReflectionClass($mutation['class']);
+        $reflectionClass  = new \ReflectionClass($mutant->getClassName());
         $reflectionMethod = $reflectionClass->getMethod(
-            $mutation['method'] . $this->_methodPreserveCode
+            $mutant->getMethodName() . $this->_methodPreserveCode
         );
-        $static = null;
-        $access = null;
+        $static           = null;
+        $access           = null;
         if ($reflectionMethod->isPublic()) {
             $access = RUNKIT_ACC_PUBLIC;
         } elseif ($reflectionMethod->isProtected()) {
@@ -134,7 +130,8 @@ class Runkit
         if (!is_null($static)) {
             return $access | $static;
         }
+
         return $access;
     }
-    
+
 }

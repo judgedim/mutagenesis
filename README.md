@@ -1,6 +1,8 @@
 Mutagenesis
 ========
 
+**Fork of 'Mutagenesis' with Composer support.**
+
 A PHP 5.3+ Mutation Testing framework.
 
 Mutagenesis is released under a New BSD License.
@@ -55,23 +57,7 @@ copy!
 Installation
 ------------
 
-The preferred installation method is via PEAR. At present no PEAR channel
-has been provided but this does not prevent a simple install! The simplest
-method of installation is:
-
-    git clone git://github.com/padraic/mutagenesis.git mutagenesis
-    cd mutagenesis
-    sudo pear install pear.xml
-
-The above process will install Mutagenesis as a PEAR library.
-
-Note: If installing from a git clone, you may need to delete any previous
-Mutagenesis install via PEAR using:
-
-    sudo pear uninstall Mutagenesis
-    
-While the git repository tracks code in development, I will add an official
-PEAR channel in the near future once a stable release is made.
+    php composer.phar require "judgedim/mutagenesis:*"
 
 Note: Mutagenesis supports PHPUnit 3.5 by default, the current stable version.
 Earlier versions of PHPUnit may or not work and it is suggested to ensure
@@ -119,7 +105,7 @@ Command Line Options
 
 A typical mutagenesis command is issued with:
 
-    mutagenesis --src="/path/project/library" --tests="/path/project/tests"
+    vendor/bin/mutagenesis --src="/path/project/library" --tests="/path/project/tests"
     
 The basic parameters let you control the directory depth, i.e. which subset of
 the source code and/or tests will be utilised. Additional options may be passed
@@ -131,6 +117,10 @@ to direct the unit test framework adapter:
 * --bootstrap: Sets a bootstrap file to include prior to running tests
 * --constraint: PHPUnit class and/or file path for test execution
 * --detail-captures: Shows mutation diffs and testing reports for captured mutants
+* --log-format: text or html (default: text)
+* --log-path: To have a html report file, you need to use this parameter
+* --src-exclude: Optional glob string to allow exclusion of files under --src
+  (can be set multiple times)
 
 Note: The default timeout is 120 seconds. Any test suite exceeding this should
 have a relevant timeout set using --timeout or else all test runs would
@@ -152,9 +142,9 @@ needs to load it as early as possible).
     
 We can pass this to mutagenesis as:
 
-    mutagenesis --src="/path/project/library" --tests="/path/project/tests" \
+    vendor/bin/mutagenesis --src="/path/project/library" --tests="/path/project/tests" \
         --options="--exclude-group disabled" --constraint="AllTests.php" \
-        --bootstrap="TestHelper.php"
+        --bootstrap="TestHelper.php" --log-format="html" --log-path="logs"
         
 Note: "\\" merely marks a line break for this README. The command should be on
 a single line with the \ removed.
@@ -193,6 +183,8 @@ changed. Here's a quick exerpt of a mutation test run with escaped mutants
 
     ...E........EE........E.EEEEEEE...EEEEE.
 
+    Score: 60%
+
     40 Mutants born out of the mutagenic slime!
 
     16 Mutants escaped; the integrity of your source code may be compromised by the following Mutants:
@@ -200,6 +192,8 @@ changed. Here's a quick exerpt of a mutation test run with escaped mutants
     1)
     Difference on Idun_Validate_And::isValid() in library/Idun/Validate/And.php
     ===================================================================
+    --- Original
+    +++ New
     @@ @@
                      $this->_errors = $conditional->getErrors();
     -                return false;
@@ -218,7 +212,7 @@ Supported Mutations
 -------------------
 
 Work on Mutagenesis is ongoing, and more mutations will be added over time. Please
-refer to the included SupportedMutations file for the current list.
+refer to the included [SupportedMutations](https://github.com/judgedim/mutagenesis/blob/master/SupportedMutations.md) file for the current list.
 
 Performance
 -----------

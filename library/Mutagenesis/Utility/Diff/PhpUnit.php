@@ -40,6 +40,11 @@ class PhpUnit implements ProviderInterface
      */
     public function difference($from, $to, $contextLines = 3)
     {
-        return \PHPUnit_Util_Diff::diff($from, $to);
+        if ($from === $to) {
+            return '';
+        }
+
+        $differ =  new \SebastianBergmann\Diff\Differ();
+        return $differ->diff($from, $to);
     }
 }

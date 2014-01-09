@@ -35,31 +35,24 @@ abstract class MutationAbstract
      *
      * @var array
      */
-    protected $_tokensOriginal = array();
+    protected $tokensOriginal = array();
 
     /**
      * Array of source code tokens after a mutation has been applied
      *
      * @var array
      */
-    protected $_tokensMutated = array();
-
-    /**
-     * Name and relative path of the file being mutated
-     *
-     * @var string
-     */
-    protected $_filename;
+    protected $tokensMutated = array();
 
     /**
      * Diff provider instance.
      *
      * @var Diff\ProviderInterface
      */
-    protected $_diffProvider;
+    protected $diffProvider;
 
     /**
-     * Constructor; sets name and relative path of the file being mutated
+     * Constructor; sets index
      *
      * @param int $index
      */
@@ -83,21 +76,24 @@ abstract class MutationAbstract
      */
     public function getDiffProvider()
     {
-        if (!$this->_diffProvider) {
-            $this->_diffProvider = new Diff\PhpUnit();
+        if (!$this->diffProvider) {
+            $this->diffProvider = new Diff\PhpUnit();
         }
-        return $this->_diffProvider;
+
+        return $this->diffProvider;
     }
 
     /**
      * Set the diff provider.
      *
      * @param Diff\ProviderInterface $provider
+     *
      * @return $this
      */
     public function setDiffProvider(Diff\ProviderInterface $provider)
     {
-        $this->_diffProvider = $provider;
+        $this->diffProvider = $provider;
+
         return $this;
     }
 
@@ -106,34 +102,15 @@ abstract class MutationAbstract
      * a mutable element
      *
      * @param array $tokens
+     *
      * @return string
      */
     public function mutate($tokens)
     {
-        $this->_tokensOriginal = $tokens;
-        $this->_tokensMutated = $this->getMutation($this->_tokensOriginal, $this->getIndex());
-        return $this->_reconstructFromTokens($this->_tokensMutated);
-    }
+        $this->tokensOriginal = $tokens;
+        $this->tokensMutated  = $this->getMutation($this->tokensOriginal, $this->getIndex());
 
-    /**
-     * Return the file path of the file which is currently being assessed for
-     * mutations.
-     *
-     * @return string
-     */
-    public function getFilename()
-    {
-        return $this->_filename;
-    }
-
-    /**
-     * @param string $fileName
-     * @return $this
-     */
-    public function setFileName($fileName)
-    {
-        $this->_filename = $fileName;
-        return $this;
+        return $this->reconstructFromTokens($this->tokensMutated);
     }
 
     /**
@@ -144,17 +121,36 @@ abstract class MutationAbstract
      */
     public function getDiff()
     {
-        $original = $this->_reconstructFromTokens($this->_tokensOriginal);
-        $mutated = $this->_reconstructFromTokens($this->_tokensMutated);
-        $difference = $this->getDiffProvider()->difference($original, $mutated);
-        return $difference;
+        if (!$this->checkDiff()) {
+            return '';
+        }
+
+        $original = $this->reconstructFromTokens($this->tokensOriginal);
+        $mutated  = $this->reconstructFromTokens($this->tokensMutated);
+
+        return $this->getDiffProvider()->difference($original, $mutated);
+    }
+
+    /**
+     * Check the mutation actually mutates
+     *
+     * @return bool
+     */
+    public function checkDiff()
+    {
+        if ($this->tokensOriginal !== $this->tokensMutated) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
      * Get a new mutation as an array of changed tokens
      *
      * @param array $tokens
-     * @param int $index
+     * @param int   $index
+     *
      * @return array
      */
     abstract public function getMutation(array $tokens, $index);
@@ -164,9 +160,10 @@ abstract class MutationAbstract
      * returned tokens
      *
      * @param array $tokens
+     *
      * @return string
      */
-    protected function _reconstructFromTokens(array $tokens)
+    protected function reconstructFromTokens(array $tokens)
     {
         $str = '';
         foreach ($tokens as $token) {
@@ -176,6 +173,7 @@ abstract class MutationAbstract
                 $str .= $token[1];
             }
         }
+
         return $str;
     }
 }

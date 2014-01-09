@@ -37,7 +37,7 @@ class Console
      * Sets up options, and initialises the Runner to perform mutation
      * tests and echo out the results
      *
-     * @param array $options
+     * @param array                              $options
      * @param \Mutagenesis\Runner\RunnerAbstract $runner Optional custom runner
      */
     public static function main(array $options = null, RunnerAbstract $runner = null)
@@ -54,7 +54,10 @@ class Console
                     'options::',
                     'timeout::',
                     'detail-captures::',
-                    'constraint::'
+                    'log-format::',
+                    'log-path::',
+                    'constraint::',
+                    'src-exclude::'
                 )
             );
         } else {
@@ -67,12 +70,15 @@ class Console
 
         self::setBaseDirectory($runner);
         self::setSourceDirectory($runner);
+        self::setSourceExcludes($runner);
         self::setTestDirectory($runner);
         self::setAdapterName($runner);
         self::setBootstrap($runner);
         self::setAdapterOptions($runner);
         self::setTimeout($runner);
         self::setDetailCaptures($runner);
+        self::setLogFormat($runner);
+        self::setLogPath($runner);
         self::setAdapterConstraint($runner);
 
         $result = $runner->execute();
@@ -104,6 +110,18 @@ class Console
             $runner->setSourceDirectory(self::$_options['src']);
         } else {
             $runner->setSourceDirectory(getcwd());
+        }
+    }
+
+    /**
+     * Set any source exclusions on the runner
+     *
+     * @param \Mutagenesis\Runner\RunnerAbstract $runner
+     */
+    protected static function setSourceExcludes(RunnerAbstract $runner)
+    {
+        if (!empty(self::$_options['src-exclude'])) {
+            $runner->setSourceExcludes((array) self::$_options['src-exclude']);
         }
     }
 
@@ -148,7 +166,7 @@ class Console
             $runner->setAdapterOption(self::$_options['options']);
         }
     }
-    
+
     /**
      * Set timeout in seconds to apply to each test run. The default timeout
      * is 120 seconds.
@@ -161,7 +179,7 @@ class Console
             $runner->setTimeout(self::$_options['timeout']);
         }
     }
-    
+
     /**
      * Set the path to a bootstrap file used when testing. This allows
      * for registering autoloaders and such, for example TestHelper.php or
@@ -175,7 +193,7 @@ class Console
             $runner->setBootstrap(self::$_options['bootstrap']);
         }
     }
-    
+
     /**
      * Set timeout in seconds to apply to each test run. The default timeout
      * is 120 seconds.
@@ -186,6 +204,30 @@ class Console
     {
         if (isset(self::$_options['detail-captures'])) {
             $runner->setDetailCaptures(true);
+        }
+    }
+
+    /**
+     * Set log format
+     *
+     * @param \Mutagenesis\Runner\RunnerAbstract $runner
+     */
+    protected static function setLogFormat(RunnerAbstract $runner)
+    {
+        if (isset(self::$_options['log-format']) && self::$_options['log-format']) {
+            $runner->setRendererName(self::$_options['log-format']);
+        }
+    }
+
+    /**
+     * Set log format
+     *
+     * @param \Mutagenesis\Runner\RunnerAbstract $runner
+     */
+    protected static function setLogPath(RunnerAbstract $runner)
+    {
+        if (isset(self::$_options['log-path']) && self::$_options['log-path']) {
+            $runner->setLogPath(self::$_options['log-path']);
         }
     }
 

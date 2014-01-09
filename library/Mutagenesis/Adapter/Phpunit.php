@@ -42,20 +42,23 @@ class Phpunit extends AdapterAbstract
      * Second element is an array containing the key "stdout" which stores the
      * output from the last test run.
      *
-     * @param \Mutagenesis\Runner\RunnerAbstract $baseRunner
-     * @param bool $useStdout
-     * @param bool $firstRun
-     * @param array $mutation
-     * @param array $testCases
+     * @param BaseRunner           $runner
+     * @param bool                 $useStdout
+     * @param bool                 $firstRun
+     * @param MutantInterface|bool $mutant
+     * @param array                $testCases
+     *
      * @return array
      */
     public function runTests(BaseRunner $runner, $useStdout = true,
-    $firstRun = false, array $mutation = array(), array $testCases = array())
+                             $firstRun = false, $mutant = false, array $testCases = array())
     {
-        $options = $runner->getOptions();
-        $job = new Job();
-        if(!$useStdout) {
+        $options   = $runner->getOptions();
+        $job       = new Job();
+        $outputKey = 'stdout';
+        if (!$useStdout) {
             array_unshift($options['clioptions'], '--stderr');
+            $outputKey = 'stderr';
         }
         if (!in_array('--stop-on-failure', $options['clioptions'])) {
             array_unshift($options['clioptions'], '--stop-on-failure');
@@ -70,25 +73,26 @@ class Phpunit extends AdapterAbstract
         }
         if (count($testCases) > 0) { // tests cases always 0 on first run
             foreach ($testCases as $className => $case) {
-                $args = $options;
+                $args                 = $options;
                 $args['clioptions'][] = $className;
                 $args['clioptions'][] = $case['file'];
-                $output = self::execute(
+                $output               = self::execute(
                     $job->generate(
-                        $mutation,
+                        $mutant,
                         $args,
                         $runner->getTimeout(),
                         $runner->getBootstrap()
                     )
                 );
-                if (!$this->processOutput($output['stdout'])) {
-                    return array(false, $output);
+                $res                  = $this->processOutput($output[$outputKey]);
+                if (false === $res) {
+                    return array($res, $output);
                 }
             }
         } else {
             $output = self::execute(
                 $job->generate(
-                    $mutation,
+                    $mutant,
                     $options,
                     /**
                      * We don't want the initial test run to time out because it
@@ -99,22 +103,26 @@ class Phpunit extends AdapterAbstract
                     $runner->getBootstrap()
                 )
             );
-            if (!$this->processOutput($output['stdout'])) {
+            $res    = $this->processOutput($output[$outputKey]);
+            if (!$res) {
                 return array(false, $output);
             }
         }
-        return array(true, $output);
+
+        return array($res, $output);
     }
 
     /**
      * Execute the generated job which is to call the static main method.
      *
      * @param string $jobScript
+     *
      * @return string $output
      */
     public static function execute($jobScript)
     {
         $output = Process::run($jobScript);
+
         return $output;
     }
 
@@ -128,13 +136,18 @@ class Phpunit extends AdapterAbstract
      * To prevent duplication of output from stdout, PHPUnit is hard
      * configured to write to stderrm(stdin is used in proc_open call)
      *
-     * @param array $arguments Mutagenesis arguments to pass to PHPUnit
+     * @param array       $arguments Mutagenesis arguments to pass to PHPUnit
+     * @param string|null $mutation
+     * @param string|null $bootstrap
+     *
      * @return void
+     *
+     * @throws \Exception
      */
     public static function main($arguments, $mutation = null, $bootstrap = null)
     {
         $arguments = unserialize($arguments);
-        
+
         /**
          * Grab the Runkit extension utility and apply the mutation if needed
          */
@@ -144,7 +157,7 @@ class Phpunit extends AdapterAbstract
                 if (!is_null($bootstrap)) {
                     require_once $bootstrap;
                 }
-                if(!in_array('runkit', get_loaded_extensions())) {
+                if (!in_array('runkit', get_loaded_extensions())) {
                     throw new \Exception(
                         'Runkit extension is not loaded. Unfortunately, runkit'
                         . ' is essential for Mutagenesis. Please see the manual or'
@@ -165,6 +178,9 @@ class Phpunit extends AdapterAbstract
             chdir($arguments['tests']);
         }
         $command = new \PHPUnit_TextUI_Command;
+        if (empty($arguments['clioptions'])) {
+            $arguments['clioptions'] = array();
+        }
         $command->run($arguments['clioptions'], false);
         chdir($originalWorkingDirectory);
     }
@@ -175,6 +191,7 @@ class Phpunit extends AdapterAbstract
      * mutation was detected by the test suite).
      *
      * @param string $output
+     *
      * @return bool
      */
     public static function processOutput($output)
@@ -182,8 +199,17 @@ class Phpunit extends AdapterAbstract
         if (substr($output, 0, 21) == 'Your tests timed out.') { //TODO: Multiple instances
             return self::TIMED_OUT;
         }
+
+        if (substr($output, 0, 7) != "PHPUnit") {
+            return self::PROCESS_FAILURE;
+        }
+
         $lines = explode("\n", $output);
+
         $useful = array_slice($lines, 2);
+        if (!empty($useful) && 0 === strpos($useful[0], "Configuration read from")) {
+            $useful = array_slice($useful, 2);
+        }
         foreach ($useful as $line) {
             if ($line == "\n") {
                 break;
@@ -192,7 +218,8 @@ class Phpunit extends AdapterAbstract
                 return false;
             }
         }
+
         return true;
-    } 
-    
+    }
+
 }
