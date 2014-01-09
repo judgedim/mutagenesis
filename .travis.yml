@@ -14,7 +14,8 @@ before_script:
   - cd ..
   - wget http://getcomposer.org/composer.phar
   - php composer.phar install
-script: phpunit --coverage-text --configuration ./tests/phpunit.xml
+script:
+  - ./vendor/bin/phpunit --coverage-text --configuration ./tests/phpunit.xml
 notifications:
     email:
         - judgedim@gmail.com
