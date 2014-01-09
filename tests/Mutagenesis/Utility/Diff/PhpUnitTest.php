@@ -26,7 +26,7 @@ use Mutagenesis\Utility\Diff\PhpUnit;
 class PhpUnitTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Mutagenesis\Utility\Diff\PhpUnit
+     * @var PhpUnit
      */
     public $provider;
 

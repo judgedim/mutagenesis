@@ -25,6 +25,31 @@ namespace Mutagenesis\Renderer;
 class Html extends RendererAbstract
 {
     /**
+     * @var string
+     */
+    private $logFile = 'mutation.html';
+
+    /**
+     * @param string $logFile
+     *
+     * @return Html
+     */
+    public function setLogFile($logFile)
+    {
+        $this->logFile = $logFile;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogFile()
+    {
+        return $this->logFile;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function renderReport($total, $captured, $escaped, array $mutables, $output = '')
@@ -35,24 +60,35 @@ class Html extends RendererAbstract
         foreach ($mutables as $mutable) {
             $score = $this->calculateScore($mutable->getMutants()->count(), $mutable->getMutantsEscaped()->count());
             $byFile[$mutable->getFilename()] = array(
-                'score' => $score,
-                'scoreStep' => ceil($score / 25) * 25,
-                'escaped' => $mutable->getMutantsEscaped()->count(),
-                'mutants' => $mutable->getMutants()->count(),
-                'mutantsEscaped' => $mutable->getMutantsEscaped(),
+                'score'           => $score,
+                'scoreStep'       => ceil($score / 25) * 25,
+                'escaped'         => $mutable->getMutantsEscaped()->count(),
+                'mutants'         => $mutable->getMutants()->count(),
+                'mutantsEscaped'  => $mutable->getMutantsEscaped(),
                 'mutantsCaptured' => $this->isDetailCaptures() ? $mutable->getMutantsCaptured() : array()
             );
         }
 
-        // render html
+        $this->writeLog($this->renderHtml($total, $escaped, $byFile));
+    }
+
+    /**
+     * @param int   $total
+     * @param int   $escaped
+     * @param array $byFile
+     *
+     * @return string
+     */
+    protected function renderHtml($total, $escaped, array $byFile)
+    {
         $html = $this->getTwig()->render('report.html.twig', array(
-            'files' => $byFile,
-            'total' => $total,
+            'files'   => $byFile,
+            'total'   => $total,
             'escaped' => $escaped,
-            'score' => $this->calculateScore($total, $escaped)
+            'score'   => $this->calculateScore($total, $escaped)
         ));
 
-        $this->writeLog($html);
+        return $html;
     }
 
     /**
@@ -64,11 +100,13 @@ class Html extends RendererAbstract
     }
 
     /**
+     * Simple write to file
+     *
      * @param string $html
      */
     protected function writeLog($html)
     {
-        $filename = $this->getLogPath() . DIRECTORY_SEPARATOR . 'mutation.html';
+        $filename = $this->getLogPath() . DIRECTORY_SEPARATOR . $this->logFile;
         file_put_contents($filename, $html);
     }
 
@@ -78,6 +116,7 @@ class Html extends RendererAbstract
     protected function getTwig()
     {
         $loader = new \Twig_Loader_Filesystem(__DIR__ . '/../Resources/views/');
+
         return new \Twig_Environment($loader, array());
     }
 }

@@ -97,11 +97,11 @@ class Html implements ProviderInterface
     }
 
     /**
-     * @param $string
+     * @param string $string
      *
      * @return mixed
      */
-    public function highlight($string)
+    private function highlight($string)
     {
         $output = highlight_string('<?php ' . $string, true);
         $output = preg_replace('!(&lt;\?php(&nbsp;).*?)!', '', $output);

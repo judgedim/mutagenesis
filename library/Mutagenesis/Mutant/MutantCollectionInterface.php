@@ -24,10 +24,21 @@ namespace Mutagenesis\Mutant;
 
 interface MutantCollectionInterface extends \IteratorAggregate
 {
+    /**
+     * @return \SplObjectStorage
+     */
     public function all();
 
-    public function push($mutant);
+    /**
+     * @param MutantInterface $mutant
+     *
+     * @return MutantCollectionInterface
+     */
+    public function push(MutantInterface $mutant);
 
+    /**
+     * @return int
+     */
     public function count();
 
     /**

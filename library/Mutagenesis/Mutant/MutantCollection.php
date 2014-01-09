@@ -83,11 +83,11 @@ class MutantCollection implements MutantCollectionInterface
     }
 
     /**
-     * @param object $mutant
+     * @param MutantInterface $mutant
      *
      * @return MutantCollection
      */
-    public function push($mutant)
+    public function push(MutantInterface $mutant)
     {
         $this->mutants->attach($mutant);
 

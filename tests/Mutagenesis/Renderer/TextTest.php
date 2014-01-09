@@ -35,51 +35,9 @@ class TextTest extends \PHPUnit_Framework_TestCase
         $this->_renderer = new Text();
     }
 
-    public function testRendersOpeningMessage()
+    public function testGetDiffProvider()
     {
-        $this->assertEquals(
-            'Mutagenesis: Mutation Testing for PHP' . PHP_EOL . PHP_EOL,
-            $this->_renderer->renderOpening()
-        );
-    }
-
-    public function testRendersFailMessageIfTestSuiteDidNotPassDuringPretest()
-    {
-        $result     = false;
-        $testOutput = 'Stuff failed';
-        $this->assertEquals(
-            'Before you face the Mutants, you first need a 100% pass rate!'
-            . PHP_EOL
-            . 'That means no failures or errors (we\'ll allow skipped or incomplete tests).'
-            . PHP_EOL . PHP_EOL
-            . $testOutput
-            . PHP_EOL . PHP_EOL,
-            $this->_renderer->renderPretest($result, $testOutput)
-        );
-    }
-
-    public function testRendersPassMessageIfTestSuiteDidPassDuringPretest()
-    {
-        $result     = true;
-        $testOutput = 'Stuff passed';
-        $this->assertEquals(
-            'All initial checks successful! The mutagenic slime has been activated.'
-            . PHP_EOL . PHP_EOL
-            . '    > ' . $testOutput
-            . PHP_EOL . PHP_EOL . 'Stand by...Mutation Testing commencing.'
-            . PHP_EOL . PHP_EOL,
-            $this->_renderer->renderPretest($result, $testOutput)
-        );
-    }
-
-    public function testRendersProgressMarkAsPeriodCharacterIfTestResultWasFalse()
-    {
-        $this->assertEquals('.', $this->_renderer->renderProgressMark(false));
-    }
-
-    public function testRendersProgressMarkAsECharacterIfTestResultWasFalse()
-    {
-        $this->assertEquals('E', $this->_renderer->renderProgressMark(true));
+        $this->assertInstanceOf('Mutagenesis\\Utility\\Diff\\PhpUnit', $this->_renderer->getDiffProvider());
     }
 
     public function testRendersFinalReportWithNoEscapeesFromASingleMutant()
