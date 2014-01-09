@@ -48,10 +48,10 @@ TODO - OPERATORS
 31. OperatorLogicalOr - replaces OR with AND
 32. OperatorLogicalXor - replaces XOR with AND
 33. OperatorLogicalNot - replaces ! with <blank>
-*34. OperatorLogicalAndSym - replaces && with || <replaces 1>
-*35. OperatorLogicalOrSym - replaces || with && <replaces 2>
+34. OperatorLogicalAndSym - replaces && with || \<replaces 1>
+35. OperatorLogicalOrSym - replaces || with && \<replaces 2>
 36. OperatorTypeInstanceof - replaces instanceof with !instanceof
-*37. OperatorTypeNotInstanceOf - <covered by OperatorLogicalNot>
+37. OperatorTypeNotInstanceOf - \<covered by OperatorLogicalNot>
 
 TODO - SCALARS
 
@@ -61,7 +61,7 @@ TODO - SCALARS
 
 TODO - LOGICAL
 
-*44. LogicalIfNegative - <covered by OperatorLogicalNot>
+44. LogicalIfNegative - \<covered by OperatorLogicalNot>
 
 TODO - RENAMES
 
