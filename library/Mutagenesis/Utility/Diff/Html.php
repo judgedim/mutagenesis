@@ -27,75 +27,8 @@
 
 namespace Mutagenesis\Utility\Diff;
 
-class Html implements ProviderInterface
+class Html extends PhpUnitAbstract implements ProviderInterface
 {
-    /**
-     * Returns the diff between two arrays or strings as string.
-     *
-     * @param array|string $from
-     * @param array|string $to
-     * @param int          $contextLines
-     *
-     * @return string
-     */
-    public function difference($from, $to, $contextLines = 3)
-    {
-        $tool   = new \SebastianBergmann\Diff\Differ('');
-        $buffer = '';
-
-        $diff = $tool->diffToArray($from, $to);
-
-        $inOld = false;
-        $i     = 0;
-        $old   = array();
-
-        foreach ($diff as $line) {
-            if ($line[1] === 0 /* OLD */) {
-                if ($inOld === false) {
-                    $inOld = $i;
-                }
-            } else if ($inOld !== false) {
-                if (($i - $inOld) > 5) {
-                    $old[$inOld] = $i - 1;
-                }
-
-                $inOld = false;
-            }
-            ++$i;
-        }
-
-        $start = isset($old[0]) ? $old[0] : 0;
-        $end   = count($diff);
-
-        if ($tmp = array_search($end, $old)) {
-            $end = $tmp;
-        }
-
-        $newChunk = true;
-
-        for ($i = $start; $i < $end; $i++) {
-            if (isset($old[$i])) {
-                $buffer .= "<br />";
-                $newChunk = true;
-                $i        = $old[$i];
-            }
-
-            if ($newChunk) {
-                $newChunk = false;
-            }
-
-            if ($diff[$i][1] === 1 /* ADDED */) {
-                $buffer .= '<span style="background-color:#DFF0D8;">' . $this->highlight($diff[$i][0]) . "</span><br />";
-            } else if ($diff[$i][1] === 2 /* REMOVED */) {
-                $buffer .= '<span style="background-color:#F2DEDE;">' . $this->highlight($diff[$i][0]) . "</span><br />";
-            } else {
-                $buffer .= ' ' . $this->highlight($diff[$i][0]) . "<br />";
-            }
-        }
-
-        return $buffer;
-    }
-
     /**
      * @param string $string
      *
@@ -107,6 +40,46 @@ class Html implements ProviderInterface
         $output = preg_replace('!(&lt;\?php(&nbsp;).*?)!', '', $output);
 
         return $output;
+    }
+
+    /**
+     * @param string $line
+     *
+     * @return string
+     */
+    protected function highlightAdded($line)
+    {
+        return '<span style="background-color:#DFF0D8;">' . $this->highlight($line) . "</span>";
+    }
+
+    /**
+     * @param string $line
+     *
+     * @return string
+     */
+    protected function highlightRemoved($line)
+    {
+        return '<span style="background-color:#F2DEDE;">' . $this->highlight($line) . "</span>";
+    }
+
+    /**
+     * @param string $line
+     *
+     * @return string
+     */
+    protected function highlightContext($line)
+    {
+        return ' ' . $this->highlight($line);
+    }
+
+    /**
+     * @param array $buffer
+     *
+     * @return string
+     */
+    protected function implodeBuffer(array $buffer)
+    {
+        return implode('<br />', $buffer) . '<br />';
     }
 
 }

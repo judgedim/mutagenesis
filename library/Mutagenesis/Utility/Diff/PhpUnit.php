@@ -26,25 +26,61 @@ namespace Mutagenesis\Utility\Diff;
  * PhpUnit diff provider implementation.
  *
  * @package Mutagenesis\Utility\Diff
- * @see Mutagenesis\Utility\Diff\ProviderInterface
+ * @see     Mutagenesis\Utility\Diff\ProviderInterface
  */
-class PhpUnit implements ProviderInterface
+class PhpUnit extends PhpUnitAbstract implements ProviderInterface
 {
     /**
-     * Returns the diff between two arrays or strings as string.
+     * @return array
+     */
+    protected function initBuffer()
+    {
+        return array(
+            "--- Original",
+            "+++ New",
+            "@@ @@"
+        );
+    }
+
+    /**
+     * @param string $line
      *
-     * @param array|string $from
-     * @param array|string $to
-     * @param int          $contextLines
      * @return string
      */
-    public function difference($from, $to, $contextLines = 3)
+    protected function highlightAdded($line)
     {
-        if ($from === $to) {
-            return '';
-        }
-
-        $differ =  new \SebastianBergmann\Diff\Differ();
-        return $differ->diff($from, $to);
+        return '+' . $line;
     }
+
+    /**
+     * @param string $line
+     *
+     * @return string
+     */
+    protected function highlightRemoved($line)
+    {
+        return '-' . $line;
+    }
+
+    /**
+     * @param string $line
+     *
+     * @return string
+     */
+    protected function highlightContext($line)
+    {
+        return ' ' . $line;
+    }
+
+    /**
+     * @param array $buffer
+     *
+     * @return string
+     */
+    protected function implodeBuffer(array $buffer)
+    {
+        return implode("\n", $buffer) . "\n";
+    }
+
+
 }
