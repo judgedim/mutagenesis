@@ -70,6 +70,46 @@ class MutationFactoryTest extends \PHPUnit_Framework_TestCase
                 new Mutation\OperatorArithmeticDivision(1)
             ),
             array(
+                '%',
+                1,
+                new Mutation\OperatorArithmeticModulus(1)
+            ),
+            array(
+                '*',
+                1,
+                new Mutation\OperatorArithmeticMultiplication(1)
+            ),
+            array(
+                '|',
+                1,
+                new Mutation\OperatorBitwiseOr(1)
+            ),
+            array(
+                '^',
+                1,
+                new Mutation\OperatorBitwiseXor(1)
+            ),
+            array(
+                '~',
+                1,
+                new Mutation\OperatorBitwiseNot(1)
+            ),
+            array(
+                '!',
+                1,
+                new Mutation\OperatorLogicalNot(1)
+            ),
+            array(
+                '<',
+                1,
+                new Mutation\OperatorComparisonLessThan(1)
+            ),
+            array(
+                '>',
+                1,
+                new Mutation\OperatorComparisonGreaterThan(1)
+            ),
+            array(
                 array(''),
                 1,
                 false
@@ -100,9 +140,54 @@ class MutationFactoryTest extends \PHPUnit_Framework_TestCase
                 new Mutation\OperatorDecrement(1)
             ),
             array(
+                array(T_PLUS_EQUAL, '+=', 1),
+                1,
+                new Mutation\OperatorAssignmentPlusEqual(1)
+            ),
+            array(
+                array(T_MINUS_EQUAL, '-=', 1),
+                1,
+                new Mutation\OperatorAssignmentMinusEqual(1)
+            ),
+            array(
+                array(T_SL, '<<', 1),
+                1,
+                new Mutation\OperatorBitwiseShiftLeft(1)
+            ),
+            array(
+                array(T_SR, '>>', 1),
+                1,
+                new Mutation\OperatorBitwiseShiftRight(1)
+            ),
+            array(
+                array(T_IS_EQUAL, '==', 1),
+                1,
+                new Mutation\OperatorComparisonEqual(1)
+            ),
+            array(
+                array(T_IS_IDENTICAL, '===', 1),
+                1,
+                new Mutation\OperatorComparisonIdentical(1)
+            ),
+            array(
                 array(T_IS_NOT_EQUAL, '!=', 1),
                 1,
                 new Mutation\OperatorComparisonNotEqual(1)
+            ),
+            array(
+                array(T_IS_NOT_IDENTICAL, '!==', 1),
+                1,
+                new Mutation\OperatorComparisonNotIdentical(1)
+            ),
+            array(
+                array(T_IS_SMALLER_OR_EQUAL, '<=', 1),
+                1,
+                new Mutation\OperatorComparisonLessThenOrEqualTo(1)
+            ),
+            array(
+                array(T_IS_GREATER_OR_EQUAL, '>=', 1),
+                1,
+                new Mutation\OperatorComparisonGreaterThanOrEqualTo(1)
             ),
             array(
                 array(T_BOOLEAN_AND, '&&', 1),
@@ -110,9 +195,24 @@ class MutationFactoryTest extends \PHPUnit_Framework_TestCase
                 new Mutation\BooleanAnd(1)
             ),
             array(
+                array(T_LOGICAL_AND, 'and', 1),
+                1,
+                new Mutation\OperatorLogicalAnd(1)
+            ),
+            array(
                 array(T_BOOLEAN_OR, '||', 1),
                 1,
                 new Mutation\BooleanOr(1)
+            ),
+            array(
+                array(T_LOGICAL_OR, 'or', 1),
+                1,
+                new Mutation\OperatorLogicalOr(1)
+            ),
+            array(
+                array(T_LOGICAL_XOR, 'xor', 1),
+                1,
+                new Mutation\OperatorLogicalXor(1)
             ),
             array(
                 array(T_CONSTANT_ENCAPSED_STRING, '"foo"', 1),
@@ -123,6 +223,11 @@ class MutationFactoryTest extends \PHPUnit_Framework_TestCase
                 array(T_LNUMBER, '123', 1),
                 1,
                 new Mutation\ScalarInteger(1)
+            ),
+            array(
+                array(T_DNUMBER, '12.3', 1),
+                1,
+                new Mutation\ScalarFloat(1)
             ),
             array(
                 array(T_IF, 'if', 1),

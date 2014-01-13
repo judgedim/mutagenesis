@@ -26,9 +26,9 @@ use Mutagenesis\Mutation\ScalarInteger;
 class ScalarIntegerTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testReturnsTokenEquivalentToOperatorComparisonEqual()
+    public function testReturnsTokenEquivalentToRandInteger()
     {
-        $index = 10;
+        $index    = 10;
         $inputInt = 12345;
         $mutation = new ScalarInteger($index);
 

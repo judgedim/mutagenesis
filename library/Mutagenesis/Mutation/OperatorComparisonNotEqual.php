@@ -28,13 +28,15 @@ class OperatorComparisonNotEqual extends MutationAbstract
      * Replace != with ==
      *
      * @param array $tokens
-     * @param int $index
+     * @param int   $index
+     *
      * @return array
      */
     public function getMutation(array $tokens, $index)
     {
         $tokens[$index][0] = T_IS_EQUAL;
         $tokens[$index][1] = "==";
+
         return $tokens;
     }
 

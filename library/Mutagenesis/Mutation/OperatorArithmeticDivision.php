@@ -27,12 +27,14 @@ class OperatorArithmeticDivision extends MutationAbstract
      * Replace division sign (/) with multiplication sign (*)
      *
      * @param array $tokens
-     * @param int $index
+     * @param int   $index
+     *
      * @return array
      */
     public function getMutation(array $tokens, $index)
     {
         $tokens[$index] = '*';
+
         return $tokens;
     }
 }

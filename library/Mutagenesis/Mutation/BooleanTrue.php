@@ -27,13 +27,15 @@ class BooleanTrue extends MutationAbstract
      * Replace boolean TRUE with FALSE
      *
      * @param array $tokens
-     * @param int $index
+     * @param int   $index
+     *
      * @return array
      */
     public function getMutation(array $tokens, $index)
     {
         $tokens[$index][0] = T_STRING;
         $tokens[$index][1] = 'false';
+
         return $tokens;
     }
 }

@@ -21,27 +21,20 @@
 
 namespace MutagenesisTest;
 
-use Mutagenesis\Mutation\ScalarString;
+use Mutagenesis\Mutation\OperatorArithmeticModulus;
 
-class ScalarStringTest extends \PHPUnit_Framework_TestCase
+class OperatorArithmeticModulusTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function testReturnsTokenEquivalentToRandString()
+    public function testReturnsTokenEquivalentToMultiplicationOperator()
     {
-        $index       = 10;
-        $inputString = "DAVEDAVEDAVE";
-        $mutation    = new ScalarString($index);
-
-        $mutations = $mutation->getMutation(
+        $index    = 10;
+        $mutation = new OperatorArithmeticModulus($index);
+        $this->assertEquals(
             array(
-                $index => array(T_CONSTANT_ENCAPSED_STRING, $inputString)
+                $index => '*'
             ),
-            $index
+            $mutation->getMutation(array(), $index)
         );
-        list($code, $outputString) = $mutations[$index];
-        $this->assertEquals(T_CONSTANT_ENCAPSED_STRING, $code);
-        $this->assertNotEquals($inputString, $outputString);
-        $this->assertInternalType("string", $outputString);
     }
-
 }
+ 

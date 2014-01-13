@@ -62,6 +62,14 @@ abstract class MutationAbstract
     }
 
     /**
+     * @return string
+     */
+    public function getClassName()
+    {
+        return get_class($this);
+    }
+
+    /**
      * @return int
      */
     public function getIndex()

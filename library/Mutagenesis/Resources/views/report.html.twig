@@ -119,6 +119,7 @@
 
             {% for mutant in info.mutantsEscaped %}
                 {#<div class="testedby">(<b>test:</b> {{ mutant.fileName }} <b>method:</b> {{ mutant.methodName }})</div>#}
+                <div class="testedby">(<b>mutation:</b> {{ mutant.mutation.className }})</div>
                 <div class="diff">
                     {{ mutant.diff|raw }}
                 </div>
@@ -126,6 +127,7 @@
 
             {% for mutant in info.mutantsCaptured %}
                 {#<div class="testedby">(<b>test:</b> {{ mutant.fileName }} <b>method:</b> {{ mutant.methodName }})</div>#}
+                <div class="testedby">(<b>mutation:</b> {{ mutant.mutation.className }})</div>
                 <div class="diff captured">
                     {{ mutant.diff|raw }}
                 </div>

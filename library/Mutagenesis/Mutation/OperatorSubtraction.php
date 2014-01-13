@@ -27,12 +27,14 @@ class OperatorSubtraction extends MutationAbstract
      * Replace minus sign (-) with plus sign (+)
      *
      * @param array $tokens
-     * @param int $index
+     * @param int   $index
+     *
      * @return array
      */
     public function getMutation(array $tokens, $index)
     {
         $tokens[$index] = '+';
+
         return $tokens;
     }
 }

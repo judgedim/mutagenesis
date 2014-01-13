@@ -62,6 +62,22 @@ class MutationFactory implements MutationFactoryInterface
                 return '\Mutagenesis\Mutation\OperatorSubtraction';
             case '/':
                 return '\Mutagenesis\Mutation\OperatorArithmeticDivision';
+            case '%':
+                return '\Mutagenesis\Mutation\OperatorArithmeticModulus';
+            case '*':
+                return '\Mutagenesis\Mutation\OperatorArithmeticMultiplication';
+            case '|':
+                return '\Mutagenesis\Mutation\OperatorBitwiseOr';
+            case '^':
+                return '\Mutagenesis\Mutation\OperatorBitwiseXor';
+            case '~':
+                return '\Mutagenesis\Mutation\OperatorBitwiseNot';
+            case '!':
+                return '\Mutagenesis\Mutation\OperatorLogicalNot';
+            case '<':
+                return '\Mutagenesis\Mutation\OperatorComparisonLessThan';
+            case '>':
+                return '\Mutagenesis\Mutation\OperatorComparisonGreaterThan';
         }
         return false;
     }
@@ -83,16 +99,42 @@ class MutationFactory implements MutationFactoryInterface
                 return '\Mutagenesis\Mutation\OperatorIncrement';
             case T_DEC:
                 return '\Mutagenesis\Mutation\OperatorDecrement';
+            case T_PLUS_EQUAL:
+                return '\Mutagenesis\Mutation\OperatorAssignmentPlusEqual';
+            case T_MINUS_EQUAL:
+                return '\Mutagenesis\Mutation\OperatorAssignmentMinusEqual';
+            case T_SL:
+                return '\Mutagenesis\Mutation\OperatorBitwiseShiftLeft';
+            case T_SR:
+                return '\Mutagenesis\Mutation\OperatorBitwiseShiftRight';
+            case T_IS_EQUAL:
+                return '\Mutagenesis\Mutation\OperatorComparisonEqual';
+            case T_IS_IDENTICAL:
+                return '\Mutagenesis\Mutation\OperatorComparisonIdentical';
             case T_IS_NOT_EQUAL:
                 return '\Mutagenesis\Mutation\OperatorComparisonNotEqual';
+            case T_IS_NOT_IDENTICAL:
+                return '\Mutagenesis\Mutation\OperatorComparisonNotIdentical';
+            case T_IS_SMALLER_OR_EQUAL:
+                return '\Mutagenesis\Mutation\OperatorComparisonLessThenOrEqualTo';
+            case T_IS_GREATER_OR_EQUAL:
+                return '\Mutagenesis\Mutation\OperatorComparisonGreaterThanOrEqualTo';
             case T_BOOLEAN_AND:
                 return '\Mutagenesis\Mutation\BooleanAnd';
+            case T_LOGICAL_AND:
+                return '\Mutagenesis\Mutation\OperatorLogicalAnd';
             case T_BOOLEAN_OR:
                 return '\Mutagenesis\Mutation\BooleanOr';
+            case T_LOGICAL_OR:
+                return '\Mutagenesis\Mutation\OperatorLogicalOr';
+            case T_LOGICAL_XOR:
+                return '\Mutagenesis\Mutation\OperatorLogicalXor';
             case T_CONSTANT_ENCAPSED_STRING:
                 return '\Mutagenesis\Mutation\ScalarString';
             case T_LNUMBER:
                 return '\Mutagenesis\Mutation\ScalarInteger';
+            case T_DNUMBER:
+                return '\Mutagenesis\Mutation\ScalarFloat';
             case T_IF:
             case T_ELSEIF:
                 return '\Mutagenesis\Mutation\LogicalIf';

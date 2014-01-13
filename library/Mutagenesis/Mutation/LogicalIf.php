@@ -31,15 +31,16 @@ class LogicalIf extends MutationAbstract
      * Wrap a conditional with a !
      *
      * @param array $tokens
-     * @param int $index
+     * @param int   $index
+     *
      * @return array
      */
     public function getMutation(array $tokens, $index)
     {
         $parenCount = false;
-        $newTokens = array_slice($tokens, 0, $index);
+        $newTokens  = array_slice($tokens, 0, $index);
 
-        while($parenCount !== 0) {
+        while ($parenCount !== 0) {
 
             if (!isset($tokens[$index])) {
                 // uh oh, we've not matched parens correctly
@@ -90,7 +91,8 @@ class LogicalIf extends MutationAbstract
          * Add our new code and the remainder of the original
          */
         $newTokens[] = ')';
-        $newTokens = array_merge($newTokens, array_slice($tokens, $index));
+        $newTokens   = array_merge($newTokens, array_slice($tokens, $index));
+
         return $newTokens;
     }
 

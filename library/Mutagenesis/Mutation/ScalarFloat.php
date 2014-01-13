@@ -19,29 +19,24 @@
  * @license    http://github.com/padraic/mutateme/blob/rewrite/LICENSE New BSD License
  */
 
-namespace MutagenesisTest;
+namespace Mutagenesis\Mutation;
 
-use Mutagenesis\Mutation\ScalarString;
-
-class ScalarStringTest extends \PHPUnit_Framework_TestCase
+class ScalarFloat extends MutationAbstract
 {
-
-    public function testReturnsTokenEquivalentToRandString()
+    /**
+     * Replace a float with random float
+     *
+     * @param array $tokens
+     * @param int   $index
+     *
+     * @return array
+     */
+    public function getMutation(array $tokens, $index)
     {
-        $index       = 10;
-        $inputString = "DAVEDAVEDAVE";
-        $mutation    = new ScalarString($index);
+        $tokens[$index][0] = T_DNUMBER;
+        $tokens[$index][1] = (float) rand() / 100;
 
-        $mutations = $mutation->getMutation(
-            array(
-                $index => array(T_CONSTANT_ENCAPSED_STRING, $inputString)
-            ),
-            $index
-        );
-        list($code, $outputString) = $mutations[$index];
-        $this->assertEquals(T_CONSTANT_ENCAPSED_STRING, $code);
-        $this->assertNotEquals($inputString, $outputString);
-        $this->assertInternalType("string", $outputString);
+        return $tokens;
     }
 
 }

@@ -24,16 +24,18 @@ namespace Mutagenesis\Mutation;
 class BooleanAnd extends MutationAbstract
 {
     /**
-     * Replace T_BOOLEAN_AND (&&) with T_BOOLEAN_OR (||) 
+     * Replace T_BOOLEAN_AND (&&) with T_BOOLEAN_OR (||)
      *
      * @param array $tokens
-     * @param int $index
+     * @param int   $index
+     *
      * @return array
      */
     public function getMutation(array $tokens, $index)
     {
         $tokens[$index][0] = T_BOOLEAN_OR;
         $tokens[$index][1] = '||';
+
         return $tokens;
     }
 }

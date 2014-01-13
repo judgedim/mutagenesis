@@ -27,13 +27,15 @@ class ScalarInteger extends MutationAbstract
      * Replace a integer with a random integer
      *
      * @param array $tokens
-     * @param int $index
+     * @param int   $index
+     *
      * @return array
      */
     public function getMutation(array $tokens, $index)
     {
         $tokens[$index][0] = T_LNUMBER;
         $tokens[$index][1] = rand();
+
         return $tokens;
     }
 

@@ -27,13 +27,15 @@ class ScalarString extends MutationAbstract
      * Replace a string with a random one
      *
      * @param array $tokens
-     * @param int $index
+     * @param int   $index
+     *
      * @return array
      */
     public function getMutation(array $tokens, $index)
     {
         $tokens[$index][0] = T_CONSTANT_ENCAPSED_STRING;
         $tokens[$index][1] = "'" . uniqid() . "'";
+
         return $tokens;
     }
 

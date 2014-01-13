@@ -86,7 +86,7 @@ class LogicalIfTest extends \PHPUnit_Framework_TestCase
     public function testReturnsTokenEquivalentToWrappedConditional($code, $index, $expected)
     {
         $mutation = new LogicalIf($index);
-        $tokens = token_get_all($code);
+        $tokens   = token_get_all($code);
         $this->assertEquals(
             $expected,
             $mutation->mutate($tokens, $index)

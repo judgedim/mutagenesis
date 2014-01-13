@@ -21,27 +21,26 @@
 
 namespace MutagenesisTest;
 
-use Mutagenesis\Mutation\ScalarString;
+use Mutagenesis\Mutation\ScalarFloat;
 
-class ScalarStringTest extends \PHPUnit_Framework_TestCase
+class ScalarFloatTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function testReturnsTokenEquivalentToRandString()
+    public function testReturnsTokenEquivalentToRandFloat()
     {
-        $index       = 10;
-        $inputString = "DAVEDAVEDAVE";
-        $mutation    = new ScalarString($index);
+        $index    = 10;
+        $input    = 12345.33;
+        $mutation = new ScalarFloat($index);
 
         $mutations = $mutation->getMutation(
             array(
-                $index => array(T_CONSTANT_ENCAPSED_STRING, $inputString)
+                $index => array(T_DNUMBER, $input)
             ),
             $index
         );
-        list($code, $outputString) = $mutations[$index];
-        $this->assertEquals(T_CONSTANT_ENCAPSED_STRING, $code);
-        $this->assertNotEquals($inputString, $outputString);
-        $this->assertInternalType("string", $outputString);
+        list($code, $output) = $mutations[$index];
+        $this->assertEquals(T_DNUMBER, $code);
+        $this->assertNotEquals($input, $output);
+        $this->assertInternalType("float", $output);
     }
-
 }
+ 

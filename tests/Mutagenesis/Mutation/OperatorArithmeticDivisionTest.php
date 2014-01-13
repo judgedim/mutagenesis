@@ -25,9 +25,9 @@ use Mutagenesis\Mutation\OperatorArithmeticDivision;
 
 class OperatorArithmeticDivisionTest extends \PHPUnit_Framework_TestCase
 {
-    public function testReturnsTokenEquivalentToSubtractionOperator()
+    public function testReturnsTokenEquivalentToMultiplicationOperator()
     {
-        $index = 10;
+        $index    = 10;
         $mutation = new OperatorArithmeticDivision($index);
         $this->assertEquals(
             array(

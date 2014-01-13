@@ -137,6 +137,7 @@ BLOCK;
 +-
 
 BLOCK;
+
         return array(
             array(
                 array(array(T_WHITESPACE, '\n  ', 6), array(T_RETURN, 'return  ', 7), array(T_WHITESPACE, '', 7), array(T_STRING, 'false', 7), ';'),

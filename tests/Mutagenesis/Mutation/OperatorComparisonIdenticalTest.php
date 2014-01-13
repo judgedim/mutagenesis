@@ -21,27 +21,20 @@
 
 namespace MutagenesisTest;
 
-use Mutagenesis\Mutation\ScalarString;
+use Mutagenesis\Mutation\OperatorComparisonIdentical;
 
-class ScalarStringTest extends \PHPUnit_Framework_TestCase
+class OperatorComparisonIdenticalTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function testReturnsTokenEquivalentToRandString()
+    public function testReturnsTokenEquivalentToNotIdenticalOperator()
     {
-        $index       = 10;
-        $inputString = "DAVEDAVEDAVE";
-        $mutation    = new ScalarString($index);
-
-        $mutations = $mutation->getMutation(
+        $index    = 10;
+        $mutation = new OperatorComparisonIdentical($index);
+        $this->assertEquals(
             array(
-                $index => array(T_CONSTANT_ENCAPSED_STRING, $inputString)
+                10 => array(T_IS_NOT_IDENTICAL, '!==')
             ),
-            $index
+            $mutation->getMutation(array(), $index)
         );
-        list($code, $outputString) = $mutations[$index];
-        $this->assertEquals(T_CONSTANT_ENCAPSED_STRING, $code);
-        $this->assertNotEquals($inputString, $outputString);
-        $this->assertInternalType("string", $outputString);
     }
-
 }
+ 
