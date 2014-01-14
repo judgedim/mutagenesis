@@ -3,6 +3,8 @@ Mutagenesis
 
 **Fork of 'Mutagenesis' with Composer support.**
 
+[![Build Status](https://travis-ci.org/judgedim/mutagenesis.png?branch=master)](https://travis-ci.org/judgedim/mutagenesis)
+
 A PHP 5.3+ Mutation Testing framework.
 
 Mutagenesis is released under a New BSD License.

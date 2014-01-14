@@ -1,6 +1,6 @@
 {
     "name": "judgedim/mutagenesis",
-    "description": "Mutation testing framework for PHP",
+    "description": "Mutation testing framework for PHP. Fork of 'Mutagenesis' with Composer support.",
     "keywords": ["testing", "quality"],
     "homepage": "http://github.com/judgedim/mutagenesis",
     "type": "library",
