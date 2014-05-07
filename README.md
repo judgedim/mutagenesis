@@ -59,7 +59,7 @@ copy!
 Installation
 ------------
 
-    php composer.phar require "judgedim/mutagenesis:*"
+    php composer.phar require "judgedim/mutagenesis:dev-master"
 
 Note: Mutagenesis supports PHPUnit 3.5 by default, the current stable version.
 Earlier versions of PHPUnit may or not work and it is suggested to ensure
